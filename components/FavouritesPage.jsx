@@ -29,7 +29,7 @@ const Item = ({title}) => (
   </View>
 );
 
-const favouritesPage = () => {
+const FavouritesPage = () => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -57,4 +57,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default favouritesPage;
+export default FavouritesPage;
