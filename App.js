@@ -22,12 +22,10 @@ export default function App() {
 			/>
 			<Tab.Screen
 			name="Favourites"
-			//component={FavouritesPage}
 			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} />}
 			/>
 			<Tab.Screen
 			 name="Basket" 
-			 //component={BasketPage} 
 			 children={(props) => <BasketPage basket={basket} />}
 			/>
 		</Tab.Navigator>
