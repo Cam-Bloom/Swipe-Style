@@ -18,15 +18,15 @@ export default function App() {
 		<Tab.Navigator style={styles.tab} screenOptions={{ swipeEnabled: false }}>
 			<Tab.Screen
 			name="Home"
-			children={(props) => <SwipePage setFavourites={setFavourites} />}
+			children={(props) => <SwipePage setFavourites={setFavourites} {...props} />}
 			/>
 			<Tab.Screen
 			name="Favourites"
-			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} />}
+			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} {...props}/>}
 			/>
 			<Tab.Screen
 			 name="Basket" 
-			 children={(props) => <BasketPage basket={basket} />}
+			 children={(props) => <BasketPage basket={basket} {...props} />}
 			/>
 		</Tab.Navigator>
 		</NavigationContainer>

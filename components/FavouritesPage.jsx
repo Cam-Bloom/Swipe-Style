@@ -10,80 +10,13 @@ import {
   Pressable,
 } from 'react-native';
 
-const DATA = [
-  {
-    item_id: 0,
-    title: "Brown Bomber Jacket",
-    price: 45,
-    color: "Brown",
-    category: "activewear",
-    brand: "Columbia",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/cuO6Oro.jpg",
-  },
-  {
-    item_id: 1,
-    title: "Cat Print Shirt",
-    price: 20,
-    color: "CREAM",
-    category: "activewear",
-    brand: "Vans",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/rVbTPTD.jpg",
-  },
-  {
-    item_id: 2,
-    title: "Trendy Red Shoes",
-    price: 60,
-    color: "WHITE",
-    category: "activewear",
-    brand: "Vans",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/ksRACaQ.jpg",
-  },
-  {
-    item_id: 3,
-    title: "Grey Ripped Jeans",
-    price: 35,
-    color: "Multi",
-    category: "activewear",
-    brand: "New Balance",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/IXovKq2.jpg",
-  },
-  {
-    item_id: 4,
-    title: "Brown Bomber Jacket",
-    price: 45,
-    color: "WHITE",
-    category: "activewear",
-    brand: "Reebok",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/cuO6Oro.jpg",
-  },
-  {
-    item_id: 5,
-    title: "Red Running Shoes",
-    price: 45,
-    color: "Black",
-    category: "activewear",
-    brand: "Quiksilver",
-    gender: "male",
-    item_img_url: "https://i.imgur.com/GLsHdA5.jpg",
-  },
-];
-
 const FavouritesPage = ({ navigation, setBasket, favourites }) => {
   const handleNavigateToBasketPage = () => {
     navigation.navigate('Basket');
   };
 
   const handleAddToBasketButton = (item) => {
-    console.log("See current busket!");
-    console.log(item);
-    if (item.title) {
-      setBasket(currentBasket => [item, ...currentBasket]);
-    }
+    setBasket(currentBasket => [item, ...currentBasket]);
   };
 
   const renderItem = ({item}) => {
@@ -99,7 +32,7 @@ const FavouritesPage = ({ navigation, setBasket, favourites }) => {
             </View>
             <View style={styles.price}>
               <Text style={styles.priceTitle}>price: </Text>
-              <Text style={styles.priceValue}>£{item.price}</Text>
+              <Text style={styles.priceValue}>{item.price}</Text>
             </View>
           </View>
           <View style={styles.right}>
@@ -119,7 +52,7 @@ const FavouritesPage = ({ navigation, setBasket, favourites }) => {
       <FlatList
         data={favourites}
         renderItem={renderItem}
-        keyExtractor={item =>item.item_id}
+        keyExtractor={item =>item.clothes_id}
       />
       <View>
         <Pressable style={styles.viewBasketButton} onPress={handleNavigateToBasketPage}>
@@ -165,7 +98,9 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     backgroundColor: '#EE6E29',
-    marginLeft: 70,
+    marginLeft: 80,
+    marginTop: 5,
+    marginBottom: 5,
   },
   viewBasketTitle: {
     fontSize: 20,
@@ -220,12 +155,12 @@ const styles = StyleSheet.create({
   },
   categoryTitle: {
     color: '#606476',
-    fontSize: 20,
+    fontSize: 15,
   },
   categoryValue: {
     color: '#B4A6AB',
     fontWeight: 'bold',
-    fontSize: 20,
+    fontSize: 15,
   },
 });
 
