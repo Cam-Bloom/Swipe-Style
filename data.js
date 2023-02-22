@@ -311,7 +311,7 @@ module.exports = [
   },
   {
     item_id: 31,
-    title: "White Trainers",
+    title: "White Male Trainers With Black",
     price: 87.49,
     color: "white",
     category: "shoes",
