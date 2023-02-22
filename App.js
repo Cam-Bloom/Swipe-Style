@@ -6,27 +6,34 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import SwipePage from "./components/SwipePage";
 import FavouritesPage from "./components/FavouritesPage";
+import BasketPage from "./components/BasketPage";
 
 export default function App() {
-  const Tab = createMaterialTopTabNavigator();
-  const [favourites, setFavourites] = useState([]);
+	const Tab = createMaterialTopTabNavigator();
+	const [favourites, setFavourites] = useState([]);
+	const [basket, setBasket] = useState([]);
 
-  return (
-    <NavigationContainer>
-      <Tab.Navigator style={styles.tab} screenOptions={{ swipeEnabled: false }}>
-        <Tab.Screen
-          name="Home"
-          component={SwipePage}
-          setFavourites={setFavourites}
-        />
-        <Tab.Screen
-          name="Favourites"
-          component={FavouritesPage}
-          favourites={favourites}
-        />
-      </Tab.Navigator>
-    </NavigationContainer>
-  );
+	return (
+		<NavigationContainer>
+		<Tab.Navigator style={styles.tab} screenOptions={{ swipeEnabled: false }}>
+			<Tab.Screen
+			name="Home"
+			component={SwipePage}
+			children={(props) => <SwipePage setFavourites={setFavourites} />}
+			/>
+			<Tab.Screen
+			name="Favourites"
+			component={FavouritesPage}
+			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} />}
+			/>
+			<Tab.Screen
+			 name="Basket" 
+			 component={BasketPage} 
+			 children={(props) => <BasketPage basket={basket} />}
+			/>
+		</Tab.Navigator>
+		</NavigationContainer>
+	);
 }
 
 const styles = StyleSheet.create({
