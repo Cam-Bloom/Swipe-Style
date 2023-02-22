@@ -13,9 +13,6 @@ import {
 const BasketPage = ({ basket }) => {
     const tit = "empty";
 
-    if (basket) {
-        tit = basket[0]?.title;
-    }
     
     return (
         <View>

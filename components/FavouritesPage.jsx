@@ -73,7 +73,7 @@ const DATA = [
   },
 ];
 
-const FavouritesPage = ({ navigation, setBasket }) => {
+const FavouritesPage = ({ navigation, setBasket, favourites }) => {
   const handleNavigateToBasketPage = () => {
     navigation.navigate('Basket');
   };
@@ -104,7 +104,7 @@ const FavouritesPage = ({ navigation, setBasket }) => {
           </View>
           <View style={styles.right}>
             <Image style={styles.productImage} source={{
-                      uri: item.item_img_url
+                      uri: `https://${item.item_img_url}`
                     }} />
             <Pressable style={styles.button} onPress={() => handleAddToBasketButton(item)}>
               <Text style={styles.text}>Add to basket</Text>
@@ -117,7 +117,7 @@ const FavouritesPage = ({ navigation, setBasket }) => {
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
-        data={DATA}
+        data={favourites}
         renderItem={renderItem}
         keyExtractor={item =>item.item_id}
       />

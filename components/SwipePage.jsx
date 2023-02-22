@@ -98,7 +98,7 @@ const SwipePage = ({ setFavourites }) => {
 
   const handleAddToFavorite = (card) => {
     console.log("Added to favourite");
-    // setFavourites((currCards) => [card, ...currCards]); //check for error in adding favourites
+    setFavourites((currCards) => [card, ...currCards]); //check for error in adding favourites
     console.log(card);
     handleSwipeOnPress(1);
     setTapCount(0);

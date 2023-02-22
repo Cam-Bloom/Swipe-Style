@@ -18,17 +18,16 @@ export default function App() {
 		<Tab.Navigator style={styles.tab} screenOptions={{ swipeEnabled: false }}>
 			<Tab.Screen
 			name="Home"
-			component={SwipePage}
 			children={(props) => <SwipePage setFavourites={setFavourites} />}
 			/>
 			<Tab.Screen
 			name="Favourites"
-			component={FavouritesPage}
+			//component={FavouritesPage}
 			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} />}
 			/>
 			<Tab.Screen
 			 name="Basket" 
-			 component={BasketPage} 
+			 //component={BasketPage} 
 			 children={(props) => <BasketPage basket={basket} />}
 			/>
 		</Tab.Navigator>
