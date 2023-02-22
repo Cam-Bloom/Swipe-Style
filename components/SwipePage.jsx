@@ -12,7 +12,7 @@ import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
 import { IconButton } from "@react-native-material/core";
 import { colors } from "../assets/utils/variables.js";
-import { getClothesList, suggestedClothes } from "../assets/utils/api.js";
+import { suggestedClothes, patchUserPrefference } from "../assets/utils/api.js";
 
 const SwipePage = ({ setFavourites }) => {
   const swiperRef = createRef();
@@ -20,6 +20,7 @@ const SwipePage = ({ setFavourites }) => {
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
+  const [preferrences, setPreferrences] = useState("");
 
   useEffect(() => {
     try {
@@ -48,6 +49,16 @@ const SwipePage = ({ setFavourites }) => {
     }
   }, [index]);
 
+  useEffect(() => {
+    if (index % 5 !== 0 && index % 10 === 0) {
+      try {
+        patchUserPrefference(12342341, { preferences: preferrences });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [index]);
+
   const handleSwipeOnPress = (preference) => {
     preference === 1
       ? swiperRef.current.swipeRight()
@@ -58,6 +69,16 @@ const SwipePage = ({ setFavourites }) => {
     preference === 1 ? console.log("like") : console.log("nope");
     setIndex((currentIndex) => currentIndex + 1);
     console.log(index);
+    if (preference === 1) {
+      updatePreferrence(clothesData[index]);
+    }
+  };
+
+  const updatePreferrence = (item) => {
+    const preferrenceStr = `${item.title} ${item.color} ${item.category} ${item.brand} ${item.gender}`;
+    const newPreferrences = preferrences.concat(preferrenceStr);
+    setPreferrences(newPreferrences);
+    console.log(preferrences);
   };
 
   const handleSwipeBack = () => {
