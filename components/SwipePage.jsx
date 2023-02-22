@@ -1,5 +1,12 @@
 import React, { useState, useRef, createRef, useEffect } from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ToastAndroid,
+  Button,
+} from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
@@ -56,6 +63,16 @@ const SwipePage = ({ setFavourites }) => {
   const handleSwipeBack = () => {
     swiperRef.current.swipeBack();
     setIndex((currentIndex) => currentIndex - 1);
+  };
+
+  const handleDoubleTap = (card) => {
+    const myTime = new Date();
+    const mySec = myTime.getTime();
+    if (mySec - lastTime < 250) {
+      handleAddToFavorite(card);
+      setTapCount(2);
+    }
+    setLastTime(mySec);
   };
 
   const handleAddToFavorite = (card) => {
@@ -124,15 +141,7 @@ const SwipePage = ({ setFavourites }) => {
         renderCard={(card) => <Card card={card} />}
         onSwipedRight={() => handleSwipe(1)}
         onSwipedLeft={() => handleSwipe(-1)}
-        onTapCard={(cardIndex) => {
-          const myTime = new Date();
-          const mySec = myTime.getTime();
-          if (mySec - lastTime < 250) {
-            handleAddToFavorite(clothesData[index]);
-            setTapCount(2);
-          }
-          setLastTime(mySec);
-        }}
+        onTapCard={(cardIndex) => handleDoubleTap(clothesData[cardIndex])}
         stackSize={5}
         stackSeparation={10}
         infinite={false}
@@ -146,33 +155,15 @@ const SwipePage = ({ setFavourites }) => {
           left: {
             title: "NOPE",
             style: {
-              label: {
-                color: colors.white,
-                backgroundColor: colors.red,
-                padding: 15,
-                fontSize: 26,
-              },
-              wrapper: {
-                flexDirection: "column",
-                alignItems: "flex-end",
-                justifyContent: "flex-start",
-              },
+              label: styles.overlayLabelsLeftLabel,
+              wrapper: styles.overlayLabelsLeftWrapper,
             },
           },
           right: {
             title: "LIKE",
             style: {
-              label: {
-                color: colors.white,
-                backgroundColor: colors.green,
-                padding: 15,
-                fontSize: 26,
-              },
-              wrapper: {
-                flexDirection: "column",
-                alignItems: "flex-start",
-                justifyContent: "flex-start",
-              },
+              label: styles.overlayLabelsRightLabel,
+              wrapper: styles.overlayLabelsRightWrapper,
             },
           },
         }}
@@ -191,6 +182,28 @@ const styles = StyleSheet.create({
   },
   swiper: {
     position: "relative",
+  },
+  overlayLabelsLeftLabel: {
+    color: colors.white,
+    backgroundColor: colors.red,
+    padding: 15,
+    fontSize: 26,
+  },
+  overlayLabelsLeftWrapper: {
+    flexDirection: "column",
+    alignItems: "flex-end",
+    justifyContent: "flex-start",
+  },
+  overlayLabelsRightLabel: {
+    color: colors.white,
+    backgroundColor: colors.green,
+    padding: 15,
+    fontSize: 26,
+  },
+  overlayLabelsRightWrapper: {
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "flex-start",
   },
   card: {
     flex: 0.65,
