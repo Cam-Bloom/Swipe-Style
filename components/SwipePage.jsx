@@ -12,6 +12,7 @@ import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
 import { IconButton } from "@react-native-material/core";
 import { colors } from "../assets/utils/variables.js";
+import { getClothesList, suggestedClothes } from "../assets/utils/api.js";
 
 const SwipePage = ({ setFavourites }) => {
   const swiperRef = createRef();
@@ -19,6 +20,33 @@ const SwipePage = ({ setFavourites }) => {
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
+
+  useEffect(() => {
+    try {
+      suggestedClothes(12342341).then((clothesFromAPI) => {
+        console.log(clothesFromAPI.data);
+        setClothesData(clothesFromAPI.data.suggestedClothes);
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (index % 5 === 0 && index % 10 !== 0) {
+      try {
+        suggestedClothes(12342341).then((clothesFromAPI) => {
+          const newdata = clothesData.concat(
+            clothesFromAPI.data.suggestedClothes
+          );
+          setClothesData(newdata);
+        });
+        console.log(clothesData, "length:---", clothesData.length);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+  }, [index]);
 
   const handleSwipeOnPress = (preference) => {
     preference === 1
@@ -29,6 +57,7 @@ const SwipePage = ({ setFavourites }) => {
   const handleSwipe = (preference) => {
     preference === 1 ? console.log("like") : console.log("nope");
     setIndex((currentIndex) => currentIndex + 1);
+    console.log(index);
   };
 
   const handleSwipeBack = () => {
@@ -57,7 +86,10 @@ const SwipePage = ({ setFavourites }) => {
   const Card = ({ card }) => {
     return (
       <View style={styles.card}>
-        <Image source={{ uri: card.item_img_url }} style={styles.cardImage} />
+        <Image
+          source={{ uri: `https://${card.item_img_url}` }}
+          style={styles.cardImage}
+        />
         <Text style={styles.cardTitle}>{card.title}</Text>
       </View>
     );
@@ -100,15 +132,6 @@ const SwipePage = ({ setFavourites }) => {
     );
   };
 
-  const HeartIcon = () => {
-    return (
-      <View style={styles.heartContainer}>
-        <Icon name="heart" />
-        <Text>Added to Favorites</Text>
-      </View>
-    );
-  };
-
   return (
     <View style={styles.container}>
       <Swiper
@@ -121,7 +144,7 @@ const SwipePage = ({ setFavourites }) => {
         onTapCard={(cardIndex) => handleDoubleTap(clothesData[cardIndex])}
         stackSize={5}
         stackSeparation={10}
-        infinite={true}
+        infinite={false}
         backgroundColor={colors.white}
         verticalSwipe={false}
         disableBottomSwipe
