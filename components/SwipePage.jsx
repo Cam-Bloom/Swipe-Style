@@ -75,7 +75,7 @@ const SwipePage = ({ setFavourites }) => {
   };
 
   const updatePreferrence = (item) => {
-    const preferrenceStr = `${item.title} ${item.color} ${item.category} ${item.brand} ${item.gender}`;
+    const preferrenceStr = `${item.title} ${item.color} ${item.brand} ${item.gender} `;
     const newPreferrences = preferrences.concat(preferrenceStr);
     setPreferrences(newPreferrences);
     console.log(preferrences);
@@ -98,7 +98,7 @@ const SwipePage = ({ setFavourites }) => {
 
   const handleAddToFavorite = (card) => {
     console.log("Added to favourite");
-    // setFavourites((currCards) => [card, ...currCards]); //check for error in adding favourites
+    setFavourites((currCards) => [card, ...currCards]); //check for error in adding favourites
     console.log(card);
     handleSwipeOnPress(1);
     setTapCount(0);

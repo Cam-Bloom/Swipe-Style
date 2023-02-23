@@ -11,16 +11,12 @@ import {
 } from 'react-native';
 
 const BasketPage = ({ basket }) => {
-    const tit = "empty";
-
-    if (basket) {
-        tit = basket[0]?.title;
-    }
+    console.log(basket);
     
     return (
         <View>
             <Text>You busket is empty! Please, buy something and then come here again!</Text>
-            <Text>{tit}</Text>
+            {/* <Text>{title}</Text> */}
         </View>
     );
 };
