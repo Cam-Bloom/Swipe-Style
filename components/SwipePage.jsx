@@ -75,7 +75,7 @@ const SwipePage = ({ setFavourites }) => {
   };
 
   const updatePreferrence = (item) => {
-    const preferrenceStr = `${item.title} ${item.color} ${item.category} ${item.brand} ${item.gender}`;
+    const preferrenceStr = `${item.title} ${item.color} ${item.brand} ${item.gender} `;
     const newPreferrences = preferrences.concat(preferrenceStr);
     setPreferrences(newPreferrences);
     console.log(preferrences);
