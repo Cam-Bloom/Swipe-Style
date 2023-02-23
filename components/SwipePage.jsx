@@ -1,18 +1,15 @@
 import React, { useState, useRef, createRef, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  ToastAndroid,
-  Button,
-} from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
 import { IconButton } from "@react-native-material/core";
-import { colors } from "../assets/utils/variables.js";
-import { suggestedClothes, patchUserPrefference } from "../assets/utils/api.js";
+import { colors, listOfAvoidWords } from "../assets/utils/variables.js";
+import {
+  suggestedClothes,
+  patchUserPreferences,
+  getUser,
+} from "../assets/utils/api.js";
 
 const SwipePage = ({ setFavourites }) => {
   const swiperRef = createRef();
@@ -20,14 +17,19 @@ const SwipePage = ({ setFavourites }) => {
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
-  const [preferrences, setPreferrences] = useState("");
+  const [preferences, setPreferences] = useState("");
 
   useEffect(() => {
     try {
-      suggestedClothes(12342341).then((clothesFromAPI) => {
-        console.log(clothesFromAPI.data);
-        setClothesData(clothesFromAPI.data.suggestedClothes);
-      });
+      Promise.all([suggestedClothes(32342341), getUser(32342341)]).then(
+        ([clothesFromAPI, userFromAPI]) => {
+          setClothesData(clothesFromAPI.data.suggestedClothes);
+          const existPreferences = userFromAPI.data.user.preferences;
+          const onLoadPreferences = preferences.concat(existPreferences);
+          setPreferences(onLoadPreferences);
+          console.log(preferences, "--onload");
+        }
+      );
     } catch (err) {
       console.log(err);
     }
@@ -36,13 +38,12 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (index % 5 === 0 && index % 10 !== 0) {
       try {
-        suggestedClothes(12342341).then((clothesFromAPI) => {
+        suggestedClothes(32342341).then((clothesFromAPI) => {
           const newdata = clothesData.concat(
             clothesFromAPI.data.suggestedClothes
           );
           setClothesData(newdata);
         });
-        console.log(clothesData, "length:---", clothesData.length);
       } catch (err) {
         console.log(err);
       }
@@ -50,9 +51,11 @@ const SwipePage = ({ setFavourites }) => {
   }, [index]);
 
   useEffect(() => {
-    if (index % 5 !== 0 && index % 10 === 0) {
+    if (index % 10 === 0) {
       try {
-        patchUserPrefference(12342341, { preferences: preferrences });
+        patchUserPreferences(32342341, { preferences }).then((res) => {
+          console.log(res.data.user.preferences, "----reply data");
+        });
       } catch (err) {
         console.log(err);
       }
@@ -70,15 +73,25 @@ const SwipePage = ({ setFavourites }) => {
     setIndex((currentIndex) => currentIndex + 1);
     console.log(index);
     if (preference === 1) {
-      updatePreferrence(clothesData[index]);
+      updatePreference(clothesData[index]);
     }
   };
 
-  const updatePreferrence = (item) => {
-    const preferrenceStr = `${item.title} ${item.color} ${item.brand} ${item.gender} `;
-    const newPreferrences = preferrences.concat(preferrenceStr);
-    setPreferrences(newPreferrences);
-    console.log(preferrences);
+  const updatePreference = (item) => {
+    const newPreferenceStr = ` ${item.title} ${item.color} `;
+    const updatedPreferences = preferences.concat(newPreferenceStr);
+    const filteredPreferences = getFilteredPreferences(updatedPreferences);
+    setPreferences(filteredPreferences);
+    console.log(preferences, "---updated and filtered");
+  };
+
+  const getFilteredPreferences = (str) => {
+    let arrayWords = str.split(" ").map((word) => word.toLowerCase());
+    const uniqWords = [...new Set(arrayWords)];
+    const filteredStr = uniqWords
+      .filter((word) => !listOfAvoidWords.includes(word))
+      .join(" ");
+    return filteredStr;
   };
 
   const handleSwipeBack = () => {

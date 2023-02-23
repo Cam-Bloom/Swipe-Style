@@ -12,6 +12,10 @@ export const suggestedClothes = (user_id) => {
   return clothesAPI.get(`/users/${user_id}/suggested_clothes`);
 };
 
-export const patchUserPrefference = (user_id, data) => {
-  return clothesAPI.patch(`/users/${user_id}`, data);
+export const getUser = (user_id) => {
+  return clothesAPI.get(`/users/${user_id}`);
+};
+
+export const patchUserPreferences = (user_id, data) => {
+  return clothesAPI.patch(`/users/${user_id}/preferences`, data);
 };
