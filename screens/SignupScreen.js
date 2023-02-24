@@ -9,18 +9,19 @@ import { TextInput, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useState } from "react";
 import {
-	signInWithEmailAndPassword,
+	createUserWithEmailAndPassword,
 } from "firebase/auth";
 import { auth } from "../config/firebase";
 
-const LoginScreen = ({navigation}) => {
+const LoginScreen = () => {
     const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 
-	const handleSignIn = () => {
-		signInWithEmailAndPassword(auth, email, password)
+	const handleSignUp = () => {
+		console.log("signup clicked");
+		createUserWithEmailAndPassword(auth, email, password)
 			.catch((error) => {
-				console.log(error);
+				console.log(error)
 			});
 	};
 
@@ -30,28 +31,38 @@ const LoginScreen = ({navigation}) => {
 				<TextInput
 					label="Email"
 					variant="outlined"
+					leading={props => <Icon name="email" {...props} />}
+					value={email}
+					onChangeText={(text) => setEmail(text)}
+				></TextInput>
+                <TextInput
+					label="Username"
+					variant="outlined"
 					leading={props => <Icon name="account" {...props} />}
+					value={email}
+					onChangeText={(text) => setEmail(text)}
+				></TextInput>
+                <TextInput
+					label="Name"
+					variant="outlined"
+					leading={props => <Icon name="account-details" {...props} />}
 					value={email}
 					onChangeText={(text) => setEmail(text)}
 				></TextInput>
 				<TextInput
 					label="Password"
 					variant="outlined"
-					leading={props => <Icon name="lock" {...props} />}
+                    leading={props => <Icon name="lock" {...props} />}
 					value={password}
 					onChangeText={(text) => setPassword(text)}
 					secureTextEntry
 				></TextInput>
 			</View>
-
 			<View style={styles.buttonContainer}>
-				<Button
-					title="Sign In"
-					onPress={handleSignIn}/>
-				<Button
-					title="Sign Up"
-					variant="outlined"
-					onPress={() => navigation.navigate('Sign Up')}/>
+				<Button 
+                    onPress={handleSignUp}
+					title="Create Account">
+				</Button>
 			</View>
 		</KeyboardAvoidingView>
 	);
@@ -65,13 +76,8 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 		alignItems: "center",
 	},
-	textfields: {
+    textfields: {
 		width: 250,
-		margin: 10
-	},
-	buttonContainer: {
-		flexDirection: 'row',
-		width: 250,
-		justifyContent: 'space-evenly'
+        margin: 10
 	}
 });
