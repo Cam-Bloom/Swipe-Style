@@ -7,6 +7,10 @@ export const colors = {
 };
 
 export const listOfAvoidWords = [
+  "only",
+  "sons",
+  "off",
+  "all",
   "in",
   "with",
   "",
@@ -15,4 +19,9 @@ export const listOfAvoidWords = [
   "and",
   "color",
   "block",
+  "x",
+  "the",
+  "design",
+  "light",
+  "dark",
 ];

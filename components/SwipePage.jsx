@@ -18,6 +18,9 @@ const SwipePage = ({ setFavourites }) => {
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
   const [preferences, setPreferences] = useState("");
+  const [listCountedLikes, setListCountedLikes] = useState({});
+  const [dislikes, setDislikes] = useState("");
+  const [listCountedDislikes, setListCountedDislikes] = useState({});
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -26,9 +29,7 @@ const SwipePage = ({ setFavourites }) => {
         ([clothesFromAPI, userFromAPI]) => {
           setClothesData(clothesFromAPI.data.suggestedClothes);
           const existPreferences = userFromAPI.data.user.preferences;
-          const onLoadPreferences = preferences.concat(existPreferences);
-          setPreferences(onLoadPreferences);
-          console.log(preferences, "--onload");
+          setPreferences(existPreferences);
         }
       );
     } catch (err) {
@@ -55,15 +56,97 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (index % 10 === 0) {
       try {
-        patchUserPreferences(32342341, { preferences }).then((res) => {
-          console.log(res.data.user.preferences, "----reply data");
-        });
+        const userPreferences = calculatePreferenances(
+          listCountedLikes,
+          listCountedDislikes
+        );
+        const topPreferences = getTopPreferences(userPreferences, 0.2);
+        let topPreferencesStr = Object.keys(topPreferences).join(" ");
+        patchUserPreferences(32342341, { preferences: topPreferencesStr }).then(
+          (res) => {
+            console.log(res.data.user.preferences, "---- reply from server");
+          }
+        );
       } catch (err) {
         console.log(err);
       }
     }
   }, [index]);
 
+  const calculatePreferenances = (likes, dislikes) => {
+    const allProperties = {};
+    for (let key in likes) {
+      allProperties[key] = +likes[key];
+      if (dislikes.hasOwnProperty(key)) {
+        allProperties[key] -= +dislikes[key];
+      }
+    }
+    return allProperties;
+  };
+
+  // DISLIKES
+  const updateDislikedPreferences = (item) => {
+    const newDislike = ` ${item.title} `;
+    const updatedDislikes = dislikes.concat(newDislike);
+    const filteredDislikes = getFilteredPreferences(updatedDislikes);
+    setDislikes(filteredDislikes);
+    updateCountedListOfDislikes(filteredDislikes);
+  };
+
+  const updateCountedListOfDislikes = (strOfDislikes) => {
+    const counted = getCountedByWordPreferences(strOfDislikes);
+    setListCountedDislikes(counted);
+    // console.log(listCountedDislikes, " ---- List Dislikes");
+  };
+
+  // LIKES
+  const updateLikedPreferences = (item) => {
+    const newPreferenceStr = ` ${item.title} `;
+    const updatedPreferences = preferences.concat(newPreferenceStr);
+    const filteredPreferences = getFilteredPreferences(updatedPreferences);
+    setPreferences(filteredPreferences);
+    updateCountedListOfLikes(filteredPreferences);
+  };
+
+  const updateCountedListOfLikes = (strOfPreference) => {
+    const counted = getCountedByWordPreferences(strOfPreference);
+    setListCountedLikes(counted);
+    // console.log(listCountedLikes, " ---- List Likes");
+  };
+
+  // HELP FUNCTIONS
+  const getFilteredPreferences = (str) => {
+    let arrayWords = str.split(" ").map((word) => word.toLowerCase());
+    const filteredStr = arrayWords
+      .filter((word) => !listOfAvoidWords.includes(word) && word.length > 2)
+      .join(" ");
+    return filteredStr;
+  };
+
+  const getCountedByWordPreferences = (str) => {
+    const counts = {};
+    const arr = str.split(" ");
+    for (let i = 0; i < arr.length; i++) {
+      const word = arr[i];
+      counts[word] = (counts[word] || 0) + 1;
+    }
+    return counts;
+  };
+
+  const getTopPreferences = (obj, percentage) => {
+    const topPairs = {};
+    const sortedEntries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
+    const numPairsToReturn = Math.ceil(sortedEntries.length * percentage);
+    for (let i = 0; i < numPairsToReturn; i++) {
+      const [key, value] = sortedEntries[i];
+      if (value > 1) {
+        topPairs[key] = value;
+      }
+    }
+    return topPairs;
+  };
+
+  // GESTURES
   const handleSwipeOnPress = (preference) => {
     preference === 1
       ? swiperRef.current.swipeRight()
@@ -71,29 +154,15 @@ const SwipePage = ({ setFavourites }) => {
   };
 
   const handleSwipe = (preference) => {
-    preference === 1 ? console.log("like") : console.log("nope");
-    setIndex((currentIndex) => currentIndex + 1);
     console.log(index);
     if (preference === 1) {
-      updatePreference(clothesData[index]);
+      console.log("like");
+      updateLikedPreferences(clothesData[index]);
+    } else {
+      console.log("nope");
+      updateDislikedPreferences(clothesData[index]);
     }
-  };
-
-  const updatePreference = (item) => {
-    const newPreferenceStr = ` ${item.title} ${item.color} `;
-    const updatedPreferences = preferences.concat(newPreferenceStr);
-    const filteredPreferences = getFilteredPreferences(updatedPreferences);
-    setPreferences(filteredPreferences);
-    console.log(preferences, "---updated and filtered");
-  };
-
-  const getFilteredPreferences = (str) => {
-    let arrayWords = str.split(" ").map((word) => word.toLowerCase());
-    const uniqWords = [...new Set(arrayWords)];
-    const filteredStr = uniqWords
-      .filter((word) => !listOfAvoidWords.includes(word))
-      .join(" ");
-    return filteredStr;
+    setIndex((currentIndex) => currentIndex + 1);
   };
 
   const handleSwipeBack = () => {
@@ -113,7 +182,7 @@ const SwipePage = ({ setFavourites }) => {
 
   const handleAddToFavorite = (card) => {
     console.log("Added to favourite");
-    setFavourites((currCards) => [card, ...currCards]); //check for error in adding favourites
+    setFavourites((currCards) => [card, ...currCards]);
     console.log(card);
     handleSwipeOnPress(1);
     setTapCount(0);
