@@ -7,6 +7,8 @@ export const colors = {
 };
 
 export const listOfAvoidWords = [
+  "a",
+  "shirt",
   "only",
   "sons",
   "off",
@@ -33,4 +35,5 @@ export const listOfAvoidWords = [
   "ralph",
   "lauren",
   "undefined",
+  "T-shirt",
 ];
