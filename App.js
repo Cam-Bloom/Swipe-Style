@@ -1,35 +1,13 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import { StyleSheet, Text, View, Image, Button } from "react-native";
-import Icon from "react-native-vector-icons/FontAwesome";
-import { NavigationContainer } from "@react-navigation/native";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import SwipePage from "./components/SwipePage";
-import FavouritesPage from "./components/FavouritesPage";
-import BasketPage from "./components/BasketPage";
+import React from "react";
+import { StyleSheet } from "react-native";
+import { UserProvider } from "./contexts/userContext";
+import RootNavigator from "./navigation/RootNavigator";
 
 export default function App() {
-	const Tab = createMaterialTopTabNavigator();
-	const [favourites, setFavourites] = useState([]);
-	const [basket, setBasket] = useState([]);
-
 	return (
-		<NavigationContainer>
-		<Tab.Navigator style={styles.tab} screenOptions={{ swipeEnabled: false }}>
-			<Tab.Screen
-			name="Home"
-			children={(props) => <SwipePage setFavourites={setFavourites} {...props} />}
-			/>
-			<Tab.Screen
-			name="Favourites"
-			children={(props) => <FavouritesPage setBasket={setBasket}  favourites={favourites} {...props}/>}
-			/>
-			<Tab.Screen
-			 name="Basket" 
-			 children={(props) => <BasketPage basket={basket} {...props} />}
-			/>
-		</Tab.Navigator>
-		</NavigationContainer>
+		<UserProvider>
+			<RootNavigator/>
+		</UserProvider>
 	);
 }
 
