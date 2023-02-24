@@ -17,24 +17,37 @@ const SwipePage = ({ setFavourites }) => {
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
-  const [preferences, setPreferences] = useState("");
+  const [preferences, setPreferences] = useState({});
   const [listCountedLikes, setListCountedLikes] = useState({});
-  const [dislikes, setDislikes] = useState("");
+  const [dislikes, setDislikes] = useState({});
   const [listCountedDislikes, setListCountedDislikes] = useState({});
   const [error, setError] = useState(null);
 
   useEffect(() => {
     try {
-      Promise.all([suggestedClothes(32342341), getUser(32342341)]).then(
-        ([clothesFromAPI, userFromAPI]) => {
-          setClothesData(clothesFromAPI.data.suggestedClothes);
-          const existPreferences = userFromAPI.data.user.preferences;
-          setPreferences(existPreferences);
-        }
-      );
+      Promise.all([suggestedClothes(32342341)]).then(([clothesFromAPI]) => {
+        setClothesData(clothesFromAPI.data.suggestedClothes);
+      });
     } catch (err) {
       setError(err);
       console.log(err);
+    }
+  }, []);
+
+  useEffect(() => {
+    try {
+      getUser(32342341).then((userFromAPI) => {
+        const existPreferences = JSON.parse(userFromAPI.data.user.preferences);
+        setListCountedLikes({
+          title: existPreferences.title,
+          color: existPreferences.color,
+          category: existPreferences.category,
+          brand: existPreferences.brand,
+        });
+        console.log(listCountedLikes);
+      });
+    } catch (er) {
+      console.log(er);
     }
   }, []);
 
@@ -56,13 +69,12 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (index % 10 === 0) {
       try {
-        const userPreferences = calculatePreferenances(
+        let userPreferences = calculatePreferenances(
           listCountedLikes,
           listCountedDislikes
         );
-        const topPreferences = getTopPreferences(userPreferences, 0.2);
-        let topPreferencesStr = Object.keys(topPreferences).join(" ");
-        patchUserPreferences(32342341, { preferences: topPreferencesStr }).then(
+        userPreferences = JSON.stringify(userPreferences);
+        patchUserPreferences(32342341, { preferences: userPreferences }).then(
           (res) => {
             console.log(res.data.user.preferences, "---- reply from server");
           }
@@ -73,45 +85,118 @@ const SwipePage = ({ setFavourites }) => {
     }
   }, [index]);
 
+  // COMBINE DISLIKES AND LIKES
   const calculatePreferenances = (likes, dislikes) => {
-    const allProperties = {};
-    for (let key in likes) {
-      allProperties[key] = +likes[key];
-      if (dislikes.hasOwnProperty(key)) {
-        allProperties[key] -= +dislikes[key];
+    for (const [key, value] of Object.entries(dislikes)) {
+      if (key in likes) {
+        for (const [key2, value2] of Object.entries(value)) {
+          if (key2 in likes[key]) {
+            likes[key][key2] -= value2;
+          }
+        }
       }
     }
-    return allProperties;
+    return remove0Preferences(likes);
+  };
+
+  function remove0Preferences(likes) {
+    for (const [key, value] of Object.entries(likes)) {
+      for (const [key2, value2] of Object.entries(value)) {
+        if (value2 <= 0) {
+          delete likes[key][key2];
+        }
+      }
+      if (Object.keys(likes[key]).length === 0) {
+        delete likes[key];
+      }
+    }
+    return likes;
+  }
+
+  const combinePreferenances = (obj1, obj2) => {
+    for (const [key, value] of Object.entries(obj2)) {
+      if (key in obj1) {
+        for (const [key2, value2] of Object.entries(value)) {
+          if (key2 in obj1[key]) {
+            obj1[key][key2] += value2;
+          }
+        }
+      }
+    }
+    return obj1;
   };
 
   // DISLIKES
   const updateDislikedPreferences = (item) => {
-    const newDislike = ` ${item.title} `;
-    const updatedDislikes = dislikes.concat(newDislike);
-    const filteredDislikes = getFilteredPreferences(updatedDislikes);
-    setDislikes(filteredDislikes);
-    updateCountedListOfDislikes(filteredDislikes);
+    const filteredTitle = getFilteredPreferences(
+      dislikes.title + " " + item.title + " "
+    );
+    const filteredCategory = getFilteredPreferences(
+      dislikes.category + " " + item.category + " "
+    );
+    const filteredColor = getFilteredPreferences(
+      dislikes.color + " " + item.color + " "
+    );
+    const dislikedBrand = dislikes.brand + "," + item.brand;
+    setDislikes({
+      title: filteredTitle,
+      color: filteredColor,
+      category: filteredCategory,
+      brand: dislikedBrand,
+    });
+    updateCountedListOfDislikes(dislikes);
   };
 
-  const updateCountedListOfDislikes = (strOfDislikes) => {
-    const counted = getCountedByWordPreferences(strOfDislikes);
-    setListCountedDislikes(counted);
-    // console.log(listCountedDislikes, " ---- List Dislikes");
+  const updateCountedListOfDislikes = (obj) => {
+    const countedTitle = getCountedByWordPreferences(obj.title, " ");
+    const countedColor = getCountedByWordPreferences(obj.color, " ");
+    const countedBrand = getCountedByWordPreferences(obj.brand, ",");
+    const countedCategory = getCountedByWordPreferences(obj.category, " ");
+    setListCountedDislikes({
+      title: countedTitle,
+      color: countedColor,
+      category: countedCategory,
+      brand: countedBrand,
+    });
+    console.log(listCountedDislikes, " ---- List Dislikes");
   };
 
   // LIKES
   const updateLikedPreferences = (item) => {
-    const newPreferenceStr = ` ${item.title} `;
-    const updatedPreferences = preferences.concat(newPreferenceStr);
-    const filteredPreferences = getFilteredPreferences(updatedPreferences);
-    setPreferences(filteredPreferences);
-    updateCountedListOfLikes(filteredPreferences);
+    const filteredTitle = getFilteredPreferences(
+      preferences.title + " " + item.title + " "
+    );
+    const filteredCategory = getFilteredPreferences(
+      preferences.category + " " + item.category + " "
+    );
+    const filteredColor = getFilteredPreferences(
+      preferences.color + " " + item.color + " "
+    );
+    const preferedBrand = preferences.brand + "," + item.brand;
+    setPreferences({
+      title: filteredTitle,
+      color: filteredColor,
+      category: filteredCategory,
+      brand: preferedBrand,
+    });
+    console.log(preferences);
+    updateCountedListOfLikes(preferences);
   };
 
-  const updateCountedListOfLikes = (strOfPreference) => {
-    const counted = getCountedByWordPreferences(strOfPreference);
-    setListCountedLikes(counted);
-    // console.log(listCountedLikes, " ---- List Likes");
+  const updateCountedListOfLikes = (obj) => {
+    const newList = {};
+    newList.countedTitle = getCountedByWordPreferences(obj.title, " ");
+    newList.countedColor = getCountedByWordPreferences(obj.color, " ");
+    newList.countedBrand = getCountedByWordPreferences(obj.brand, ",");
+    newList.countedCategory = getCountedByWordPreferences(obj.category, " ");
+
+    // console.log(newList, "---new list");
+
+    // combine ListCountedLikes which is set onLoan with new liked counted items
+
+    const combinedLikes = combinePreferenances(listCountedLikes, newList);
+    //setListCountedLikes(combinedLikes);
+    console.log(combinedLikes, " ---- combinedLikes");
   };
 
   // HELP FUNCTIONS
@@ -123,9 +208,9 @@ const SwipePage = ({ setFavourites }) => {
     return filteredStr;
   };
 
-  const getCountedByWordPreferences = (str) => {
+  const getCountedByWordPreferences = (str, symbol) => {
     const counts = {};
-    const arr = str.split(" ");
+    const arr = str.split(symbol);
     for (let i = 0; i < arr.length; i++) {
       const word = arr[i];
       counts[word] = (counts[word] || 0) + 1;

@@ -24,4 +24,13 @@ export const listOfAvoidWords = [
   "design",
   "light",
   "dark",
+  "jack",
+  "jones",
+  "asos",
+  "adidas",
+  "originals",
+  "polo",
+  "ralph",
+  "lauren",
+  "undefined",
 ];
