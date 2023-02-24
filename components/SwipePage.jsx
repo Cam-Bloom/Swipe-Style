@@ -21,6 +21,7 @@ const SwipePage = ({ setFavourites }) => {
   const [listCountedLikes, setListCountedLikes] = useState({});
   const [dislikes, setDislikes] = useState("");
   const [listCountedDislikes, setListCountedDislikes] = useState({});
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     try {
@@ -32,6 +33,7 @@ const SwipePage = ({ setFavourites }) => {
         }
       );
     } catch (err) {
+      setError(err);
       console.log(err);
     }
   }, []);
@@ -237,41 +239,52 @@ const SwipePage = ({ setFavourites }) => {
 
   return (
     <View style={styles.container}>
-      <Swiper
-        ref={swiperRef}
-        cards={clothesData}
-        cardIndex={index}
-        renderCard={(card) => <Card card={card} />}
-        onSwipedRight={() => handleSwipe(1)}
-        onSwipedLeft={() => handleSwipe(-1)}
-        onTapCard={(cardIndex) => handleDoubleTap(clothesData[cardIndex])}
-        stackSize={5}
-        stackSeparation={10}
-        infinite={false}
-        backgroundColor={colors.white}
-        verticalSwipe={false}
-        disableBottomSwipe
-        disableTopSwipe
-        style={styles.swiper}
-        animateCardOpacity
-        overlayLabels={{
-          left: {
-            title: "NOPE",
-            style: {
-              label: styles.overlayLabelsLeftLabel,
-              wrapper: styles.overlayLabelsLeftWrapper,
-            },
-          },
-          right: {
-            title: "LIKE",
-            style: {
-              label: styles.overlayLabelsRightLabel,
-              wrapper: styles.overlayLabelsRightWrapper,
-            },
-          },
-        }}
-      />
-      <Buttons />
+      {/* DISPLAY ERROR  */}
+      {error && (
+        <Text style={styles.errorText}>
+          An error occurred trying to fetch the data. Put a button here, try
+          again?
+        </Text>
+      )}
+      {!error && (
+        <>
+          <Swiper
+            ref={swiperRef}
+            cards={clothesData}
+            cardIndex={index}
+            renderCard={(card) => <Card card={card} />}
+            onSwipedRight={() => handleSwipe(1)}
+            onSwipedLeft={() => handleSwipe(-1)}
+            onTapCard={(cardIndex) => handleDoubleTap(clothesData[cardIndex])}
+            stackSize={5}
+            stackSeparation={10}
+            infinite={false}
+            backgroundColor={colors.white}
+            verticalSwipe={false}
+            disableBottomSwipe
+            disableTopSwipe
+            style={styles.swiper}
+            animateCardOpacity
+            overlayLabels={{
+              left: {
+                title: "NOPE",
+                style: {
+                  label: styles.overlayLabelsLeftLabel,
+                  wrapper: styles.overlayLabelsLeftWrapper,
+                },
+              },
+              right: {
+                title: "LIKE",
+                style: {
+                  label: styles.overlayLabelsRightLabel,
+                  wrapper: styles.overlayLabelsRightWrapper,
+                },
+              },
+            }}
+          />
+          <Buttons />
+        </>
+      )}
     </View>
   );
 };
