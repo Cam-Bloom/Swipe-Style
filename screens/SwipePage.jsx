@@ -10,8 +10,11 @@ import {
   patchUserPreferences,
   getUser,
 } from "../utils/api.js";
+import { useContext } from 'react';
+import {UserContext} from '../contexts/userContext'
 
 const SwipePage = ({ setFavourites }) => {
+  const {user} = useContext(UserContext)
   const swiperRef = createRef();
   const [clothesData, setClothesData] = useState(data);
   const [index, setIndex] = useState(1);
@@ -25,7 +28,7 @@ const SwipePage = ({ setFavourites }) => {
 
   useEffect(() => {
     try {
-      Promise.all([suggestedClothes(32342341), getUser(32342341)]).then(
+      Promise.all([suggestedClothes(user), getUser(user)]).then(
         ([clothesFromAPI, userFromAPI]) => {
           setClothesData(clothesFromAPI.data.suggestedClothes);
           const existPreferences = userFromAPI.data.user.preferences;
@@ -41,7 +44,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (index % 5 === 0 && index % 10 !== 0) {
       try {
-        suggestedClothes(32342341).then((clothesFromAPI) => {
+        suggestedClothes(user).then((clothesFromAPI) => {
           const newdata = clothesData.concat(
             clothesFromAPI.data.suggestedClothes
           );
@@ -62,7 +65,7 @@ const SwipePage = ({ setFavourites }) => {
         );
         const topPreferences = getTopPreferences(userPreferences, 0.2);
         let topPreferencesStr = Object.keys(topPreferences).join(" ");
-        patchUserPreferences(32342341, { preferences: topPreferencesStr }).then(
+        patchUserPreferences(user, { preferences: topPreferencesStr }).then(
           (res) => {
             console.log(res.data.user.preferences, "---- reply from server");
           }
