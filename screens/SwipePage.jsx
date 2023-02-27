@@ -25,7 +25,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     const fetchInitialSuggestedClothes = async () => {
       try {
-        const clothesFromAPI = await suggestedClothes(12342341);
+        const clothesFromAPI = await suggestedClothes(42342341);
         setClothesData(clothesFromAPI.data.suggestedClothes);
       } catch (err) {
         setError(err);
@@ -35,7 +35,7 @@ const SwipePage = ({ setFavourites }) => {
 
     const fetchUserDataThenSetPreferences = async () => {
       try {
-        const userFromAPI = await getUser(12342341);
+        const userFromAPI = await getUser(42342341);
         const existingUserPreferences = JSON.parse(
           userFromAPI.data.user.preferences
         );
@@ -53,7 +53,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     const fetchSuggestedClothesAndConcat = async () => {
       try {
-        const clothesFromAPI = await suggestedClothes(12342341);
+        const clothesFromAPI = await suggestedClothes(42342341);
         const newData = clothesData.concat(
           clothesFromAPI.data.suggestedClothes
         );
@@ -66,8 +66,8 @@ const SwipePage = ({ setFavourites }) => {
     const patchUserPreferencesUseEffect = async () => {
       try {
         const data = JSON.stringify(preferences);
-        const res = await patchUserPreferences(12342341, { preferences: data });
-        //console.log(res.data.user.preferences, "---- reply from server");
+        const res = await patchUserPreferences(42342341, { preferences: data });
+        // console.log(res.data.user.preferences, "---- reply from server");
       } catch (err) {
         console.log(err);
       }
@@ -125,14 +125,14 @@ const SwipePage = ({ setFavourites }) => {
       let titleWords = title.split(" ");
       titleWords.forEach((word) => {
         let lowerCaseWord = word.toLowerCase();
-        if (!listOfAvoidWords.includes(lowerCaseWord)) {
+        if (!listOfAvoidWords.includes(lowerCaseWord) && word.length > 2) {
           newPreferences.title[lowerCaseWord] =
             (newPreferences.title[lowerCaseWord] || 0) + 1;
         }
       });
     }
     setPreferences(newPreferences);
-    //console.log(preferences.title);
+    // console.log(preferences, "-----preferences");
   };
 
   const removeFromPreferences = (item) => {
@@ -183,7 +183,7 @@ const SwipePage = ({ setFavourites }) => {
       });
     }
     setPreferences(newPreferences);
-    //console.log(preferences.title);
+    // console.log(preferences, "----preferences after delete");
   };
 
   // GESTURES

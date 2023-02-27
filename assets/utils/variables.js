@@ -36,4 +36,5 @@ export const listOfAvoidWords = [
   "lauren",
   "undefined",
   "T-shirt",
+  "by",
 ];
