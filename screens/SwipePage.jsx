@@ -15,138 +15,179 @@ import {UserContext} from '../contexts/userContext'
 
 const SwipePage = ({ setFavourites }) => {
   const {user} = useContext(UserContext)
+  console.log(user)
   const swiperRef = createRef();
   const [clothesData, setClothesData] = useState(data);
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
-  const [preferences, setPreferences] = useState("");
-  const [listCountedLikes, setListCountedLikes] = useState({});
-  const [dislikes, setDislikes] = useState("");
-  const [listCountedDislikes, setListCountedDislikes] = useState({});
+  const [preferences, setPreferences] = useState({});
   const [error, setError] = useState(null);
 
+  //this fetches the initial array of 10 items. user.uid needs passing in
+  //this gets the user object from the api, the user object will be passed in here and the user.uid will be put in the getUser
   useEffect(() => {
-    try {
-      Promise.all([suggestedClothes(user), getUser(user)]).then(
-        ([clothesFromAPI, userFromAPI]) => {
-          setClothesData(clothesFromAPI.data.suggestedClothes);
-          const existPreferences = userFromAPI.data.user.preferences;
-          setPreferences(existPreferences);
-        }
-      );
-    } catch (err) {
-      setError(err);
-      console.log(err);
-    }
+    const fetchInitialSuggestedClothes = async () => {
+      try {
+        const clothesFromAPI = await suggestedClothes(user);
+        setClothesData(clothesFromAPI.data.suggestedClothes);
+      } catch (err) {
+        setError(err);
+        console.log(err, "couldnt fetch suggested clothes");
+      }
+    };
+
+    const fetchUserDataThenSetPreferences = async () => {
+      try {
+        const userFromAPI = await getUser(user);
+        const existingUserPreferences = JSON.parse(
+          userFromAPI.data.user.preferences
+        );
+        setPreferences(existingUserPreferences);
+      } catch (err) {
+        console.log(err, "couldnt fetch existing user preferences");
+      }
+    };
+
+    fetchInitialSuggestedClothes();
+    fetchUserDataThenSetPreferences();
   }, []);
 
+  //user.uid will need passing in to these functions
   useEffect(() => {
-    if (index % 5 === 0 && index % 10 !== 0) {
+    const fetchSuggestedClothesAndConcat = async () => {
       try {
-        suggestedClothes(user).then((clothesFromAPI) => {
-          const newdata = clothesData.concat(
-            clothesFromAPI.data.suggestedClothes
-          );
-          setClothesData(newdata);
-        });
+        const clothesFromAPI = await suggestedClothes(user);
+        const newData = clothesData.concat(
+          clothesFromAPI.data.suggestedClothes
+        );
+        setClothesData(newData);
       } catch (err) {
         console.log(err);
       }
-    }
-  }, [index]);
+    };
 
-  useEffect(() => {
+    const patchUserPreferencesUseEffect = async () => {
+      try {
+        const data = JSON.stringify(preferences);
+        const res = await patchUserPreferences(user, { preferences: data });
+        // console.log(res.data.user.preferences, "---- reply from server");
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    //on every 10th index
     if (index % 10 === 0) {
-      try {
-        const userPreferences = calculatePreferenances(
-          listCountedLikes,
-          listCountedDislikes
-        );
-        const topPreferences = getTopPreferences(userPreferences, 0.2);
-        let topPreferencesStr = Object.keys(topPreferences).join(" ");
-        patchUserPreferences(user, { preferences: topPreferencesStr }).then(
-          (res) => {
-            console.log(res.data.user.preferences, "---- reply from server");
-          }
-        );
-      } catch (err) {
-        console.log(err);
-      }
+      patchUserPreferencesUseEffect();
+      //every 10+5 index
+    } else if (index % 10 !== 0 && index % 5 === 0) {
+      fetchSuggestedClothesAndConcat();
     }
   }, [index]);
 
-  const calculatePreferenances = (likes, dislikes) => {
-    const allProperties = {};
-    for (let key in likes) {
-      allProperties[key] = +likes[key];
-      if (dislikes.hasOwnProperty(key)) {
-        allProperties[key] -= +dislikes[key];
+  //this will add an item to user preferences
+  const addToPreferences = (item) => {
+    //create a copy of preferences object from state
+    let newPreferences = Object.assign({}, preferences);
+
+    //init the object, make sure it has correct keys
+    newPreferences.brand = newPreferences.brand || {};
+    newPreferences.category = newPreferences.category || {};
+    newPreferences.color = newPreferences.color || {};
+    newPreferences.title = newPreferences.title || {};
+
+    //sometimes getting error, crashing program, item.brand = undefined, so i added if statements
+    if (item.brand) {
+      //make everything lowercase
+      let lowerCaseBrand = item.brand.toLowerCase();
+      newPreferences.brand[lowerCaseBrand] =
+        //if it doesnt exist, create it and set it to 0, then increment by 1
+        //this means if it doesnt exist, it will be 1. if it exists it will be +=1
+        (newPreferences.brand[lowerCaseBrand] || 0) + 1;
+    }
+    if (item.category) {
+      let lowerCaseCategory = item.category.toLowerCase();
+      newPreferences.category[lowerCaseCategory] =
+        (newPreferences.category[lowerCaseCategory] || 0) + 1;
+    }
+    if (item.color) {
+      let lowerCaseColor = item.color.toLowerCase();
+      newPreferences.color[lowerCaseColor] =
+        (newPreferences.color[lowerCaseColor] || 0) + 1;
+    }
+    if (item.title) {
+      //if the brand, color or category already exist in title, dont add them
+      let lowerCaseBrand = item.brand.toLowerCase();
+      let lowerCaseColor = item.color.toLowerCase();
+      let lowerCaseCategory = item.category.toLowerCase();
+      let title = item.title
+        .replace(lowerCaseBrand, "")
+        .replace(lowerCaseColor, "")
+        .replace(lowerCaseCategory, "")
+        .trim();
+      let titleWords = title.split(" ");
+      titleWords.forEach((word) => {
+        let lowerCaseWord = word.toLowerCase();
+        if (!listOfAvoidWords.includes(lowerCaseWord) && word.length > 2) {
+          newPreferences.title[lowerCaseWord] =
+            (newPreferences.title[lowerCaseWord] || 0) + 1;
+        }
+      });
+    }
+    setPreferences(newPreferences);
+    // console.log(preferences, "-----preferences");
+  };
+
+  const removeFromPreferences = (item) => {
+    let newPreferences = Object.assign({}, preferences);
+    newPreferences.brand = newPreferences.brand || {};
+    newPreferences.category = newPreferences.category || {};
+    newPreferences.color = newPreferences.color || {};
+    newPreferences.title = newPreferences.title || {};
+
+    if (item.brand) {
+      item.brand = item.brand.toLowerCase();
+      if (newPreferences.brand[item.brand]) {
+        newPreferences.brand[item.brand]--;
+        if (newPreferences.brand[item.brand] === 0) {
+          delete newPreferences.brand[item.brand];
+        }
       }
     }
-    return allProperties;
-  };
-
-  // DISLIKES
-  const updateDislikedPreferences = (item) => {
-    const newDislike = ` ${item.title} `;
-    const updatedDislikes = dislikes.concat(newDislike);
-    const filteredDislikes = getFilteredPreferences(updatedDislikes);
-    setDislikes(filteredDislikes);
-    updateCountedListOfDislikes(filteredDislikes);
-  };
-
-  const updateCountedListOfDislikes = (strOfDislikes) => {
-    const counted = getCountedByWordPreferences(strOfDislikes);
-    setListCountedDislikes(counted);
-    // console.log(listCountedDislikes, " ---- List Dislikes");
-  };
-
-  // LIKES
-  const updateLikedPreferences = (item) => {
-    const newPreferenceStr = ` ${item.title} `;
-    const updatedPreferences = preferences.concat(newPreferenceStr);
-    const filteredPreferences = getFilteredPreferences(updatedPreferences);
-    setPreferences(filteredPreferences);
-    updateCountedListOfLikes(filteredPreferences);
-  };
-
-  const updateCountedListOfLikes = (strOfPreference) => {
-    const counted = getCountedByWordPreferences(strOfPreference);
-    setListCountedLikes(counted);
-    // console.log(listCountedLikes, " ---- List Likes");
-  };
-
-  // HELP FUNCTIONS
-  const getFilteredPreferences = (str) => {
-    let arrayWords = str.split(" ").map((word) => word.toLowerCase());
-    const filteredStr = arrayWords
-      .filter((word) => !listOfAvoidWords.includes(word) && word.length > 2)
-      .join(" ");
-    return filteredStr;
-  };
-
-  const getCountedByWordPreferences = (str) => {
-    const counts = {};
-    const arr = str.split(" ");
-    for (let i = 0; i < arr.length; i++) {
-      const word = arr[i];
-      counts[word] = (counts[word] || 0) + 1;
-    }
-    return counts;
-  };
-
-  const getTopPreferences = (obj, percentage) => {
-    const topPairs = {};
-    const sortedEntries = Object.entries(obj).sort((a, b) => b[1] - a[1]);
-    const numPairsToReturn = Math.ceil(sortedEntries.length * percentage);
-    for (let i = 0; i < numPairsToReturn; i++) {
-      const [key, value] = sortedEntries[i];
-      if (value > 1) {
-        topPairs[key] = value;
+    if (item.category) {
+      item.category = item.category.toLowerCase();
+      if (newPreferences.category[item.category]) {
+        newPreferences.category[item.category]--;
+        if (newPreferences.category[item.category] === 0) {
+          delete newPreferences.category[item.category];
+        }
       }
     }
-    return topPairs;
+    if (item.color) {
+      item.color = item.color.toLowerCase();
+      if (newPreferences.color[item.color]) {
+        newPreferences.color[item.color]--;
+        if (newPreferences.color[item.color] === 0) {
+          delete newPreferences.color[item.color];
+        }
+      }
+    }
+    if (item.title) {
+      item.title = item.title.toLowerCase();
+      let titleWords = item.title.split(" ");
+      titleWords.forEach((word) => {
+        word = word.toLowerCase();
+        if (newPreferences.title[word]) {
+          newPreferences.title[word]--;
+          if (newPreferences.title[word] === 0) {
+            delete newPreferences.title[word];
+          }
+        }
+      });
+    }
+    setPreferences(newPreferences);
+    // console.log(preferences, "----preferences after delete");
   };
 
   // GESTURES
@@ -159,11 +200,11 @@ const SwipePage = ({ setFavourites }) => {
   const handleSwipe = (preference) => {
     console.log(index);
     if (preference === 1) {
-      console.log("like");
-      updateLikedPreferences(clothesData[index]);
+      //console.log("like");
+      addToPreferences(clothesData[index]);
     } else {
-      console.log("nope");
-      updateDislikedPreferences(clothesData[index]);
+      //console.log("nope");
+      removeFromPreferences(clothesData[index]);
     }
     setIndex((currentIndex) => currentIndex + 1);
   };
@@ -184,20 +225,25 @@ const SwipePage = ({ setFavourites }) => {
   };
 
   const handleAddToFavorite = (card) => {
-    console.log("Added to favourite");
+    //console.log("Added to favourite");
     setFavourites((currCards) => [card, ...currCards]);
-    console.log(card);
+    //console.log(card);
     handleSwipeOnPress(1);
     setTapCount(0);
   };
 
+  //added some error handling if img_url undefined
   const Card = ({ card }) => {
     return (
       <View style={styles.card}>
-        <Image
-          source={{ uri: `https://${card.item_img_url}` }}
-          style={styles.cardImage}
-        />
+        {card.item_img_url ? (
+          <Image
+            source={{ uri: `https://${card.item_img_url}` }}
+            style={styles.cardImage}
+          />
+        ) : (
+          <Text style={styles.cardTitle}>Error: Image URL is undefined</Text>
+        )}
         <Text style={styles.cardTitle}>{card.title}</Text>
       </View>
     );
