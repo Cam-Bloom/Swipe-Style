@@ -4,12 +4,12 @@ import Icon from "react-native-vector-icons/AntDesign";
 import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
 import { IconButton } from "@react-native-material/core";
-import { colors, listOfAvoidWords } from "../assets/utils/variables.js";
+import { colors, listOfAvoidWords } from "../utils/variables.js";
 import {
   suggestedClothes,
   patchUserPreferences,
   getUser,
-} from "../assets/utils/api.js";
+} from "../utils/api.js";
 
 const SwipePage = ({ setFavourites }) => {
   const swiperRef = createRef();
