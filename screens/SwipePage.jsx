@@ -10,8 +10,12 @@ import {
   patchUserPreferences,
   getUser,
 } from "../utils/api.js";
+import { useContext } from 'react';
+import {UserContext} from '../contexts/userContext'
 
 const SwipePage = ({ setFavourites }) => {
+  const {user} = useContext(UserContext)
+  console.log(user)
   const swiperRef = createRef();
   const [clothesData, setClothesData] = useState(data);
   const [index, setIndex] = useState(1);
@@ -25,7 +29,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     const fetchInitialSuggestedClothes = async () => {
       try {
-        const clothesFromAPI = await suggestedClothes(42342341);
+        const clothesFromAPI = await suggestedClothes(user);
         setClothesData(clothesFromAPI.data.suggestedClothes);
       } catch (err) {
         setError(err);
@@ -35,7 +39,7 @@ const SwipePage = ({ setFavourites }) => {
 
     const fetchUserDataThenSetPreferences = async () => {
       try {
-        const userFromAPI = await getUser(42342341);
+        const userFromAPI = await getUser(user);
         const existingUserPreferences = JSON.parse(
           userFromAPI.data.user.preferences
         );
@@ -53,7 +57,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     const fetchSuggestedClothesAndConcat = async () => {
       try {
-        const clothesFromAPI = await suggestedClothes(42342341);
+        const clothesFromAPI = await suggestedClothes(user);
         const newData = clothesData.concat(
           clothesFromAPI.data.suggestedClothes
         );
@@ -66,7 +70,7 @@ const SwipePage = ({ setFavourites }) => {
     const patchUserPreferencesUseEffect = async () => {
       try {
         const data = JSON.stringify(preferences);
-        const res = await patchUserPreferences(42342341, { preferences: data });
+        const res = await patchUserPreferences(user, { preferences: data });
         // console.log(res.data.user.preferences, "---- reply from server");
       } catch (err) {
         console.log(err);
