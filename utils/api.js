@@ -19,3 +19,7 @@ export const getUser = (user_id) => {
 export const patchUserPreferences = (user_id, data) => {
   return clothesAPI.patch(`/users/${user_id}/preferences`, data);
 };
+
+export const postUser = (data) => {
+  return clothesAPI.post('/users', data)
+}
