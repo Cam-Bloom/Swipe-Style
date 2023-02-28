@@ -12,6 +12,8 @@ import {
 } from "../utils/api.js";
 import { useContext } from 'react';
 import {UserContext} from '../contexts/userContext'
+import {LoadingContext} from '../contexts/loadingContext'
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const SwipePage = ({ setFavourites }) => {
   const {user} = useContext(UserContext)
@@ -22,16 +24,19 @@ const SwipePage = ({ setFavourites }) => {
   const [lastTime, setLastTime] = useState(0);
   const [preferences, setPreferences] = useState({});
   const [error, setError] = useState(null);
-
+  const [intialLoading, setIntialLoading] = useState(false)
   //this fetches the initial array of 10 items. user.uid needs passing in
   //this gets the user object from the api, the user object will be passed in here and the user.uid will be put in the getUser
   useEffect(() => {
     const fetchInitialSuggestedClothes = async () => {
+      setIntialLoading(true)
       try {
         const clothesFromAPI = await suggestedClothes(user);
         setClothesData(clothesFromAPI.data.suggestedClothes);
+        setIntialLoading(false)
       } catch (err) {
         setError(err);
+        setIntialLoading(false)
         console.log(err, "couldnt fetch suggested clothes");
       }
     };
@@ -42,13 +47,18 @@ const SwipePage = ({ setFavourites }) => {
         const existingUserPreferences = JSON.parse(
           userFromAPI.data.user.preferences
         );
+        
         setPreferences(existingUserPreferences);
       } catch (err) {
         console.log(err, "couldnt fetch existing user preferences");
       }
     };
 
-    fetchInitialSuggestedClothes();
+    // suggestedClothes(user).then(({data}) => {
+    //   setClothesData(data.suggestedClothes);
+    // }).catch((err) => console.log(err))
+
+    fetchInitialSuggestedClothes()
     fetchUserDataThenSetPreferences();
   }, []);
 
@@ -285,7 +295,7 @@ const SwipePage = ({ setFavourites }) => {
     );
   };
 
-  return (
+  return intialLoading ? <LoadingSpinner/> : (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (

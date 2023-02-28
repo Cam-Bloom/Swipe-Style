@@ -1,10 +1,11 @@
 import { KeyboardAvoidingView, StyleSheet, View, Text } from "react-native";
 import { TextInput, Button } from "@react-native-material/core";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
-import React, { useState, useEffect } from "react";
+import React, { useState, useContext } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { postUser } from "../utils/api";
+import {LoadingContext} from '../contexts/loadingContext'
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,7 @@ const LoginScreen = () => {
   const [username, setUsername] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(undefined);
+  const {loading, setLoading} = useContext(LoadingContext)
   const charRegex = /^\w+$/;
   const letterRegex = /^[a-z]+$/i;
 
@@ -27,6 +29,9 @@ const LoginScreen = () => {
     } else if (!letterRegex.test(name)) {
       setError("Name should only contain letters.");
     } else {
+
+      
+
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           const body = {
@@ -36,14 +41,22 @@ const LoginScreen = () => {
             preferences:
               '{"title":{"cat":1,"dog":1,"rekive":1,"techno":1,"aloxe":1,"ess":1,"t-shirt":1,"sage":1,"green":1,"reclaimed":1,"vintage":1,"unisex":1,"stone":1,"active":1,"boxer":1,"shorts":1,"polo":1,"ralph":1,"lauren":1,"icon":1,"logo":1,"heavyweight":1,"classic":1,"fit":1,"white":1},"color":{"red":1,"green":1,"stone":1,"white":1},"category":{"shirt":1,"activewear":1},"brand":{"asos":1,"adidas Originals":1,"Reclaimed Vintage":1,"Polo Ralph Lauren":1}}',
           };
+          
+          return body
+          
+        }).then((body) => {
 
+          setLoading(true)
           postUser(body)
-            .then(() => {
-              console.log("User Added");
+            .then((res) => {
+              setLoading(false)
+              console.log(res);
             })
             .catch((err) => {
+              setLoading(false)
               console.log(err);
             });
+
         })
         .catch((error) => {
           console.log(error.message);
@@ -68,7 +81,7 @@ const LoginScreen = () => {
           ) {
             setError("Please enter a password");
           }
-        });
+        })
     }
   };
 
