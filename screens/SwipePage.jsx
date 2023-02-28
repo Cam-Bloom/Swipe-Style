@@ -9,6 +9,7 @@ import {
   suggestedClothes,
   patchUserPreferences,
   getUser,
+  postFavouritesByUserId
 } from "../utils/api.js";
 import { useContext } from 'react';
 import {UserContext} from '../contexts/userContext'
@@ -233,12 +234,16 @@ const SwipePage = ({ setFavourites }) => {
     setLastTime(mySec);
   };
 
-  const handleAddToFavorite = (card) => {
-    //console.log("Added to favourite");
-    setFavourites((currCards) => [card, ...currCards]);
-    //console.log(card);
-    handleSwipeOnPress(1);
-    setTapCount(0);
+  const handleAddToFavorite = async (card) => {
+    try {
+      setFavourites((currCards) => [card, ...currCards]);
+      handleSwipeOnPress(1);
+      setTapCount(0)
+      const res = await postFavouritesByUserId(user, card.clothes_id);
+      console.log(res);;
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   //added some error handling if img_url undefined

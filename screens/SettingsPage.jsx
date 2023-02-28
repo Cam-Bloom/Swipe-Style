@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, ToastAndroid } from 'react-native'
 import React from 'react'
 import { Button } from "@react-native-material/core";
 import { auth } from "../config/firebase";
@@ -22,8 +22,8 @@ const SettingsPage = () => {
     const resetRecommendations = async () => {
         try {
             const data = '{"title":{"cat":1,"dog":1,"rekive":1,"techno":1,"aloxe":1,"ess":1,"t-shirt":1,"sage":1,"green":1,"reclaimed":1,"vintage":1,"unisex":1,"stone":1,"active":1,"boxer":1,"shorts":1,"polo":1,"ralph":1,"lauren":1,"icon":1,"logo":1,"heavyweight":1,"classic":1,"fit":1,"white":1},"color":{"red":1,"green":1,"stone":1,"white":1},"category":{"shirt":1,"activewear":1},"brand":{"asos":1,"adidas Originals":1,"Reclaimed Vintage":1,"Polo Ralph Lauren":1}}'
-            console.log(user);
             await patchUserPreferences(user, {preferences: data});
+            ToastAndroid.show('Reset Successful', ToastAndroid.SHORT);
 
         } catch (err) {
             console.log(err);
@@ -50,7 +50,7 @@ const styles = StyleSheet.create({
     reset: {
       margin: 10
     },
-    
+
     signout: {
       margin: 10
     }
