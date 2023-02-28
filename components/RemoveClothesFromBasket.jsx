@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Icon from "react-native-vector-icons/AntDesign";
-import { deleteClothesFromBasket } from '../assets/utils/api';
+import { deleteClothesFromBasket } from '../utils/api';
 
 const RemoveClothesFromBasket = ({ setBasket, item, setTotalAmount }) => {
     //errors should be handled later
@@ -13,9 +13,6 @@ const RemoveClothesFromBasket = ({ setBasket, item, setTotalAmount }) => {
         let currentPrice = parseFloat(item?.price?.substr(1)) ?? 0;
         setTotalAmount(currentTotalAmount => currentTotalAmount - (item.basket_count * currentPrice));
 
-        console.log("we are trying to remove clothes from basket");
-        console.log(item.basket_id);
-
         deleteClothesFromBasket(item.basket_id)
             .then(() => {
                 setBasket(currentBasket => currentBasket.filter(basket => basket.basket_id !== item.basket_id));
@@ -24,8 +21,8 @@ const RemoveClothesFromBasket = ({ setBasket, item, setTotalAmount }) => {
             .catch((err) => {
                 setTotalAmount(currentTotalAmount => currentTotalAmount + (item.basket_count * item.price));
                 
+                // need to add error handling here
                 console.log(err);
-
                 setError(err);
             })
     };

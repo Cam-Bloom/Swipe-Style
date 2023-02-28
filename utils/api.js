@@ -44,3 +44,7 @@ export const deleteClothesFromBasket = (basketId) => {
   console.log(basketId);
   return clothesAPI.delete(`/baskets/${basketId}`);
 }
+
+export const postUser = (data) => {
+  return clothesAPI.post('/users', data)
+}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from "react-native-vector-icons/AntDesign";
-import { deleteClothesFromFavourites} from '../assets/utils/api';
-import { colors } from "../assets/utils/variables.js";
+import { deleteClothesFromFavourites} from '../utils/api';
+import { colors } from "../utils/variables.js";
 
 const RemoveFavouriteButton = ({ setFavourites, favouriteId }) => {
     //errors should be handled later
@@ -10,17 +10,14 @@ const RemoveFavouriteButton = ({ setFavourites, favouriteId }) => {
 
     const deleteCurrentClothes = () => {
         setIsRemoving(true);
-
-        console.log("we are trying to remove favourite");
-        console.log(favouriteId);
         
         deleteClothesFromFavourites(favouriteId)
             .then(() => {
                 setFavourites(currentFavourite => currentFavourite.filter(favourite => favourite.favourite_id !== favouriteId));
                 setIsRemoving(false);
-                console.log("favourite was removed");
             })
             .catch((err) => {
+                // need to add error handling
                 console.log(err);
                 setError(err);
             })

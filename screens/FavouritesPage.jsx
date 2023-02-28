@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   View,
@@ -9,8 +9,8 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import AddToBasketButton from './AddToBasketButton';
-import RemoveFavouriteButton from './RemoveFavouriteButton';
+import AddToBasketButton from '../components/AddToBasketButton';
+import RemoveFavouriteButton from '../components/RemoveFavouriteButton';
 
 const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavourites }) => {
   const handleNavigateToBasketPage = () => {
@@ -41,7 +41,7 @@ const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavouri
               <Image style={styles.productImage} source={{
                         uri: `https://${item.item_img_url}`
                       }} />
-              <AddToBasketButton basket={basket} setBasket={setBasket} clothes_id={item.clothes_id}/>
+              <AddToBasketButton basket={basket} setBasket={setBasket} clothes={item} />
             </View>
           </View>
         </View>

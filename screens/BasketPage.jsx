@@ -9,26 +9,22 @@ import {
   Image,
   Pressable,
 } from 'react-native';
-import RemoveClothesFromBasket from './RemoveClothesFromBasket';
-import EditClothesAmountButton from './EditClothesAmountButton';
+import RemoveClothesFromBasket from '../components/RemoveClothesFromBasket';
+import EditClothesAmountButton from '../components/EditClothesAmountButton';
 
 const BasketPage = ({ basket, setBasket }) => {
   const [totalAmount, setTotalAmount] = useState(0);
-  console.log(basket);
 
   useEffect(() => {
     let totalPrice = 0;
 
     basket.forEach(item => {
       let currentPrice = parseFloat(item?.price?.substr(1)) ?? 0;
-      console.log(currentPrice);
+
       totalPrice += (item.basket_count * currentPrice);
-      console.log(totalPrice);
     });
 
     setTotalAmount(totalPrice);
-    
-    console.log(totalAmount);
   }, [basket]);
     
     const renderItem = ({item}) => {

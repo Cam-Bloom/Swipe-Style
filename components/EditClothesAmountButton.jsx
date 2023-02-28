@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Icon from "react-native-vector-icons/AntDesign";
-import { deleteClothesFromBasket, patchClothesCount } from '../assets/utils/api';
+import { deleteClothesFromBasket, patchClothesCount } from '../utils/api';
 import {
   View,
   StyleSheet,
@@ -18,8 +18,6 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
   const increaseAmount = () => {
     setAmount(amount + 1);
 
-    console.log(itemPrice);
-
     setTotalAmount(currentTotalAmount => currentTotalAmount + itemPrice);
 
     patchClothesCount(item.basket_id, {clothes_count: 1})
@@ -33,9 +31,6 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
 					});
 
 					setBasket(currentBasket);
-
-					console.log(basket);
-					console.log("the amount of this clothes was increased by one!");
 				})
 				.catch((err) => {
           setAmount(amount - 1);
@@ -52,9 +47,6 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
       setTotalAmount(currentTotalAmount => currentTotalAmount - itemPrice);
       setIsRemoving(true);
 
-        console.log("we are trying to remove clothes from basket");
-        console.log(item.basket_id);
-
         deleteClothesFromBasket(item.basket_id)
             .then(() => {
                 setBasket(currentBasket => currentBasket.filter(basket => basket.basket_id !== item.basket_id));
@@ -63,8 +55,8 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
             .catch((err) => {
               setTotalAmount(currentTotalAmount => currentTotalAmount + itemPrice);
 
+              // need to add error handling here
               console.log(err);
-
               setError(err);
             })
     } else {
@@ -82,9 +74,6 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
 					});
 
 					setBasket(currentBasket);
-
-					console.log(basket);
-					console.log("the amount of this clothes was decreased by one!");
 				})
 				.catch((err) => {
           setAmount(amount + 1);

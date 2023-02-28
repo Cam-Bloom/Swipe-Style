@@ -1,27 +1,19 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Pressable, Text } from 'react-native';
-import { patchClothesCount, postClothesToBasket} from '../assets/utils/api';
+import { StyleSheet, Pressable, Text } from 'react-native';
+import { patchClothesCount, postClothesToBasket} from '../utils/api';
 
-const AddToBasketButton = ({ basket, setBasket, clothes_id }) => {
+const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 	const [count, setCount] = useState(0);
 
 	//just hardcoded userId temporarily => this should be changed later
 	const [userId, setUserId] = useState("12342341")
 
-	console.log(count);
-
 	const addNewClothesToBasket = () => {
 		const currentBasket = [...basket];
-
-		console.log("current basket");
-		console.log(currentBasket);
-
-		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes_id);
-
-		console.log("wether current clothes have already been added to basket");
-		console.log(existingClothes);
+		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes.clothes_id);
 
 		setCount(count + 1);
+
 		if (existingClothes.length > 0) {
 			patchClothesCount(existingClothes[0].basket_id, {clothes_count: 1})
 				.then((clothesWithIncreasedCount) => {
@@ -32,8 +24,6 @@ const AddToBasketButton = ({ basket, setBasket, clothes_id }) => {
 					});
 
 					setBasket(currentBasket);
-					console.log(basket);
-					console.log("the amount of this clothes was increased by one!");
 				})
 				.catch((err) => {
 					setCount(count - 1);
@@ -43,12 +33,21 @@ const AddToBasketButton = ({ basket, setBasket, clothes_id }) => {
 				console.log(err);
 				});
 		} else {
-			// this should be changed => here clothes data such as image, price, count should be returned for rendering on basket page!
-			postClothesToBasket(userId, {clothes_id: clothes_id})
+			postClothesToBasket(userId, {clothes_id: clothes.clothes_id})
 				.then((clothesAddedToBasket) => {
-					console.log("clothes were added!");
-					console.log(clothesAddedToBasket.data.clothesBasket);
-					setBasket(currentBasket => [clothesAddedToBasket.data.clothesBasket, ...basket]);
+					const { clothesBasket } = clothesAddedToBasket.data;
+
+					const newClothesAddedToBasket = {
+						"basket_id": clothesBasket.basket_id,
+						"basket_count": clothesBasket.basket_count,
+						"clothes_id": clothesBasket.clothes_id,
+						"uid": clothesBasket.uid,
+						"title": clothes.title,
+						"item_img_url": clothes.item_img_url,
+						"price": clothes.price,
+					}
+
+					setBasket(currentBasket => [newClothesAddedToBasket, ...basket]);
 					setCount(count + 1);
 			})
 			.catch((err) => {
@@ -59,8 +58,6 @@ const AddToBasketButton = ({ basket, setBasket, clothes_id }) => {
 			});
 		}
 	};
-
-  console.log(count);
 
   return (
 	<Pressable style={styles.button} onPress={() => addNewClothesToBasket()}>
