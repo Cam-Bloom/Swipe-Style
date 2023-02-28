@@ -37,7 +37,7 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
           setTotalAmount(currentTotalAmount => currentTotalAmount - itemPrice);
 
           // need to add error handling here
-          console.log("clothes count wasnt been updated");
+          console.log("clothes count hasn't been updated");
           console.log(err);
 				});
   };
@@ -80,7 +80,7 @@ const EditClothesAmountButton = ({ basket, setBasket, item, setTotalAmount }) =>
           setTotalAmount(currentTotalAmount => currentTotalAmount + itemPrice);
           
           // need to add error handling here
-          console.log("clothes count wasnt been updated");
+          console.log("clothes count hasn't been updated");
           console.log(err);
 				});
     }

@@ -29,7 +29,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 					setCount(count - 1);
 
 				// need to add error handling here
-				console.log("clothes count wasnt been updated");
+				console.log("clothes count hasn't been updated");
 				console.log(err);
 				});
 		} else {
@@ -53,7 +53,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 			.catch((err) => {
 				setCount(count - 1);
 				// need to add error handling here
-				console.log("clothes wasnt been added to basket");
+				console.log("clothes hasn't been added to basket");
 				console.log(err);
 			});
 		}
