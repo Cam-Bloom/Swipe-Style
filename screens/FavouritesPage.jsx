@@ -18,6 +18,8 @@ const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavouri
   };
 
   const renderItem = ({item}) => {
+    
+
     return (
         <View style={styles.item}>
           <View style={styles.top}>

@@ -1,45 +1,33 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Pressable, Text } from 'react-native';
-import { patchClothesCount, postClothesToBasket} from '../utils/api';
+import { View, StyleSheet, Pressable, Text } from 'react-native';
+import { postClothesToBasket, deleteClothesFromBasket } from '../utils/api';
 
 const AddToBasketButton = ({ basket, setBasket, clothes }) => {
-	const [isAddedToBasket, setIsAddedToBasket] = useState(false);
+	const currentBasket = [...basket];
+	const existingClothes = currentBasket?.filter(x => x.clothes_id === clothes.clothes_id);
+
+	const [isAddedToBasket, setIsAddedToBasket] = useState(existingClothes?.length > 0 ? true : false);
+	const [existingClothesInBasket, setExistingClothesInBasket] = useState(existingClothes[0]);
 
 	//just hardcoded userId temporarily => this should be changed later
-	const [userId, setUserId] = useState("12342341")
+	const [userId, setUserId] = useState("12342341");
 
 	useEffect(() => {
-		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes.clothes_id);
-		if (existingClothes) {
+		const currentUpdatedBasket = [...basket];
+		const existingCurrentClothes = currentUpdatedBasket.filter(x => x.clothes_id === clothes.clothes_id);
+
+		setExistingClothesInBasket(existingCurrentClothes);
+
+		if (existingCurrentClothes[0]) {
 			setIsAddedToBasket(true);
+		} else {
+			setIsAddedToBasket(false);
 		}
-	}, []);
+	}, [basket]);
 
 	const addNewClothesToBasket = () => {
-		const currentBasket = [...basket];
-		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes.clothes_id);
+		setIsAddedToBasket(true);
 
-		if (existingClothes.length > 0) {
-			setIsAddedToBasket(true);
-
-			patchClothesCount(existingClothes[0].basket_id, {clothes_count: 1})
-				.then((clothesWithIncreasedCount) => {
-					currentBasket.forEach(item => {
-						if (existingClothes[0].basket_id === item.basket_id) {
-							item.basket_count += 1;
-						}
-					});
-
-					setBasket(currentBasket);
-				})
-				.catch((err) => {
-					setIsAddedToBasket(false);
-
-				// need to add error handling here
-				console.log("clothes count hasn't been updated");
-				console.log(err);
-				});
-		} else {
 			postClothesToBasket(userId, {clothes_id: clothes.clothes_id})
 				.then((clothesAddedToBasket) => {
 					const { clothesBasket } = clothesAddedToBasket.data;
@@ -54,21 +42,41 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 						"price": clothes.price,
 					}
 
-					setBasket(currentBasket => [newClothesAddedToBasket, ...basket]);
+					setBasket([newClothesAddedToBasket, ...basket]);
 			})
 			.catch((err) => {
+				setIsAddedToBasket(false);
+
 				// need to add error handling here
 				console.log("clothes hasn't been added to basket");
 				console.log(err);
 			});
-		}
+	};
+
+	const removeClothesFromBasket = () => {
+			deleteClothesFromBasket(existingClothesInBasket[0].basket_id)
+					.then(() => {
+						setIsAddedToBasket(false);
+						setBasket(currentBasket => currentBasket.filter(basket => basket.basket_id !== existingClothesInBasket[0].basket_id));
+							// setIsRemoving(false);
+					})
+					.catch((err) => {	
+							// need to add error handling here
+							console.log(err);
+							// setError(err);
+					})
 	};
 
   return (
 		<View>
-			{!isAddedToBasket} 
-				? <Pressable style={styles.adderButton} onPress={() => addNewClothesToBasket()}> <Text style={styles.text}>Add to basket</Text></Pressable>
-				: <Pressable style={styles.removerButton} onPress={() => removeClothesFromBasket()}><Text style={styles.text}>Remove from basket</Text></Pressable> 
+			{!isAddedToBasket ?
+			<Pressable style={styles.adderButton} onPress={() => addNewClothesToBasket()}>
+				 <Text style={styles.text}>Add to basket</Text>
+			</Pressable> : 
+			<Pressable style={styles.removerButton} onPress={() => removeClothesFromBasket()}>
+				 <Text style={styles.text}>Remove from basket</Text>
+			</Pressable>
+			}
 		</View>
 	);
 };
@@ -78,13 +86,14 @@ const styles = StyleSheet.create({
     height: 65,
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 18,
+    paddingHorizontal: 16,
     borderRadius: 8,
     elevation: 6,
     backgroundColor: '#008C83',
   },
 	removerButton: {
 		height: 65,
+		width: 148,
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 18,
@@ -99,7 +108,6 @@ const styles = StyleSheet.create({
       letterSpacing: 0.25,
       color: 'white',
   },
-
 });
 
 export default AddToBasketButton;
