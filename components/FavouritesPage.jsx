@@ -9,39 +9,40 @@ import {
   Image,
   Pressable,
 } from 'react-native';
+import AddToBasketButton from './AddToBasketButton';
+import RemoveFavouriteButton from './RemoveFavouriteButton';
 
-const FavouritesPage = ({ navigation, setBasket, favourites }) => {
+const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavourites }) => {
   const handleNavigateToBasketPage = () => {
     navigation.navigate('Basket');
-  };
-
-  const handleAddToBasketButton = (item) => {
-    setBasket(currentBasket => [item, ...currentBasket]);
   };
 
   const renderItem = ({item}) => {
     return (
         <View style={styles.item}>
-          <View style={styles.left}>
-            <View style={styles.description}>
-              <Text style={styles.title}>{item.title}</Text>
-              <View style={styles.category}>
-                <Text style={styles.categoryTitle}>category: </Text>
-                <Text style={styles.categoryValue}>{item.category}</Text>
+          <View style={styles.top}>
+            <RemoveFavouriteButton setFavourites={setFavourites} favouriteId={item.favourite_id} />
+          </View>
+          <View style={styles.bottom}>
+            <View style={styles.left}>
+              <View style={styles.description}>
+                <Text style={styles.title}>{item.title}</Text>
+                <View style={styles.category}>
+                  <Text style={styles.categoryTitle}>category: </Text>
+                  <Text style={styles.categoryValue}>{item.category}</Text>
+                </View>
+              </View>
+              <View style={styles.price}>
+                <Text style={styles.priceTitle}>price: </Text>
+                <Text style={styles.priceValue}>{item.price}</Text>
               </View>
             </View>
-            <View style={styles.price}>
-              <Text style={styles.priceTitle}>price: </Text>
-              <Text style={styles.priceValue}>{item.price}</Text>
+            <View style={styles.right}>
+              <Image style={styles.productImage} source={{
+                        uri: `https://${item.item_img_url}`
+                      }} />
+              <AddToBasketButton basket={basket} setBasket={setBasket} clothes_id={item.clothes_id}/>
             </View>
-          </View>
-          <View style={styles.right}>
-            <Image style={styles.productImage} source={{
-                      uri: `https://${item.item_img_url}`
-                    }} />
-            <Pressable style={styles.button} onPress={() => handleAddToBasketButton(item)}>
-              <Text style={styles.text}>Add to basket</Text>
-            </Pressable>
           </View>
         </View>
     );
@@ -65,9 +66,8 @@ const FavouritesPage = ({ navigation, setBasket, favourites }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     marginTop: StatusBar.currentHeight || 0,
-    justifyContent: 'center',
   },
   item: {
     backgroundColor: '#F6F3F1',
@@ -77,6 +77,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 8,
+  },
+  top: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
+  },
+  bottom: {
     flexDirection: 'row',
   },
   title: {
