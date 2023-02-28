@@ -1,36 +1,35 @@
-import {
-  SafeAreaView,
-  View,
-  StyleSheet,
-  ActivityIndicator,
-} from 'react-native';
+import { SafeAreaView, View, StyleSheet } from "react-native";
+import LottieView from "lottie-react-native";
+import { colors } from "../utils/variables.js";
 
 const LoadingSpinner = () => {
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-          <View style={styles.container}>
-              <ActivityIndicator
-                size='large'
-                textContent={'Loading...'}
-                textStyle={styles.spinnerTextStyle}
-              />
-          </View>
-        </SafeAreaView>
-      );
-    };
+  return (
+    <SafeAreaView style={{ flex: 1 }}>
+      <View style={styles.container}>
+        <LottieView
+          style={styles.loadingLottie}
+          autoPlay={true}
+          loop={true}
+          source={require("../assets/lottie/loading.json")}
+        />
+      </View>
+    </SafeAreaView>
+  );
+};
 
-export default LoadingSpinner
+export default LoadingSpinner;
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      textAlign: 'center',
-      paddingTop: 30,
-      backgroundColor: '#ecf0f1',
-      padding: 8,
-    },
-    spinnerTextStyle: {
-      color: '#FFF',
-    },
-  });
+  container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.white,
+  },
+  spinnerTextStyle: {
+    color: "#FFF",
+  },
+  loadingLottie: {
+    width: 200,
+  },
+});

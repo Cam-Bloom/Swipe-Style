@@ -1,7 +1,10 @@
 export const colors = {
-  red: "#E94057",
+  red: "#F9423E",
+  violet: "#E096D9",
+  darkviolet: "#c56fd4",
   green: "#27AE60",
   white: "#fff",
+  lightgrey: "#f7f7f7",
   darkgrey: "#574D4D",
   border: "#E8E6EA",
 };
