@@ -238,10 +238,11 @@ const SwipePage = ({ setFavourites }) => {
     try {
       setFavourites((currCards) => [card, ...currCards]);
       handleSwipeOnPress(1);
-      setTapCount(0)
+      setTapCount(0);
       const res = await postFavouritesByUserId(user, card.clothes_id);
-      console.log(res);;
+      console.log(res);
     } catch (err) {
+      setFavourites((currCards) => currCards.filter((item) => item.clothes_id !== card.clothes_id));
       console.log(err);
     }
   };
