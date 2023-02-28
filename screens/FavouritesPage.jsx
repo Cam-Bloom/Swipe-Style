@@ -9,6 +9,9 @@ import {
   Image,
   Pressable,
 } from "react-native";
+import { IconButton } from "@react-native-material/core";
+import Icon from "react-native-vector-icons/FontAwesome";
+import { colors } from "../utils/variables.js";
 
 const FavouritesPage = ({ navigation, setBasket, favourites }) => {
   const handleNavigateToBasketPage = () => {
@@ -49,6 +52,24 @@ const FavouritesPage = ({ navigation, setBasket, favourites }) => {
             <Text style={styles.text}>Add to basket</Text>
           </Pressable>
         </View>
+        {/* ICON BUTTONS: BASKET AND REMOVE */}
+        {/* <View style={styles.buttonArea}>
+          <IconButton
+            icon={(props) => (
+              <Icon name="shopping-basket" color={colors.white} size={25} />
+            )}
+            backgroundColor={colors.green}
+            onPress={() => handleAddToBasketButton(item)}
+          />
+          <IconButton
+            icon={(props) => (
+              <Icon name="remove" color={colors.white} size={25} />
+            )}
+            color={colors.darkgrey}
+            backgroundColor={colors.violet}
+            onPress={() => {}}
+          />
+        </View> */}
       </View>
     );
   };
@@ -77,22 +98,23 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: StatusBar.currentHeight || 0,
     justifyContent: "center",
+    backgroundColor: colors.white,
   },
   item: {
-    backgroundColor: "#F6F3F1",
-    borderWidth: 3,
-    borderRadius: 5,
-    borderColor: "#606476",
+    backgroundColor: colors.lightgrey,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: colors.border,
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 8,
     flexDirection: "row",
   },
   title: {
-    fontSize: 25,
+    fontSize: 20,
     paddingRight: 5,
     fontWeight: "bold",
-    color: "#606476",
+    color: colors.darkgrey,
   },
   productImage: {
     width: 130,
@@ -101,39 +123,37 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   viewBasketButton: {
-    height: 45,
-    width: 250,
     alignItems: "center",
     borderRadius: 8,
     elevation: 3,
-    backgroundColor: "#EE6E29",
-    marginLeft: 80,
+    backgroundColor: colors.darkviolet,
+    marginLeft: 16,
+    marginRight: 16,
     marginTop: 5,
     marginBottom: 5,
   },
   viewBasketTitle: {
     fontSize: 20,
-    lineHeight: 21,
+    lineHeight: 26,
     fontWeight: "bold",
     letterSpacing: 0.25,
-    color: "white",
+    color: colors.white,
     padding: 12,
   },
   button: {
-    height: 65,
     alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 8,
     elevation: 6,
-    backgroundColor: "#008C83",
+    backgroundColor: colors.green,
   },
   text: {
     fontSize: 16,
-    lineHeight: 21,
+    lineHeight: 22,
     fontWeight: "bold",
     letterSpacing: 0.25,
-    color: "white",
+    color: colors.white,
   },
   left: {
     flex: 3,
@@ -143,6 +163,10 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: "center",
   },
+  buttonArea: {
+    flex: 1,
+    flexDirection: "row",
+  },
   description: {
     paddingBottom: 10,
   },
@@ -150,26 +174,25 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   priceTitle: {
-    fontSize: 20,
-    color: "#606476",
+    fontSize: 16,
+    color: colors.darkgrey,
   },
   priceValue: {
-    color: "#B8354E",
-    fontSize: 20,
+    color: colors.darkgrey,
+    fontSize: 16,
     fontWeight: "bold",
   },
   category: {
-    marginTop: 15,
+    marginTop: 16,
     flexDirection: "row",
   },
   categoryTitle: {
-    color: "#606476",
-    fontSize: 15,
+    color: colors.darkgrey,
+    fontSize: 16,
   },
   categoryValue: {
-    color: "#B4A6AB",
-    fontWeight: "bold",
-    fontSize: 15,
+    color: colors.darkgrey,
+    fontSize: 16,
   },
 });
 
