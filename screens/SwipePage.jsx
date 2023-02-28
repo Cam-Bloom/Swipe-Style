@@ -4,39 +4,42 @@ import Icon from "react-native-vector-icons/AntDesign";
 import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
 import { IconButton } from "@react-native-material/core";
+import LottieView from "lottie-react-native";
 import { colors, listOfAvoidWords } from "../utils/variables.js";
 import {
   suggestedClothes,
   patchUserPreferences,
   getUser,
 } from "../utils/api.js";
-import { useContext } from 'react';
-import {UserContext} from '../contexts/userContext'
-import {LoadingContext} from '../contexts/loadingContext'
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
 import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const SwipePage = ({ setFavourites }) => {
-  const {user} = useContext(UserContext)
+  const { user } = useContext(UserContext);
   const swiperRef = createRef();
+  const favAnimation = useRef(null);
   const [clothesData, setClothesData] = useState(data);
   const [index, setIndex] = useState(1);
   const [tapCount, setTapCount] = useState(0);
   const [lastTime, setLastTime] = useState(0);
   const [preferences, setPreferences] = useState({});
   const [error, setError] = useState(null);
-  const [intialLoading, setIntialLoading] = useState(false)
+  const [isPressed, setIsPressed] = useState(false);
+  const [intialLoading, setIntialLoading] = useState(false);
+
   //this fetches the initial array of 10 items. user.uid needs passing in
   //this gets the user object from the api, the user object will be passed in here and the user.uid will be put in the getUser
   useEffect(() => {
     const fetchInitialSuggestedClothes = async () => {
-      setIntialLoading(true)
+      setIntialLoading(true);
       try {
         const clothesFromAPI = await suggestedClothes(user);
         setClothesData(clothesFromAPI.data.suggestedClothes);
-        setIntialLoading(false)
+        setIntialLoading(false);
       } catch (err) {
         setError(err);
-        setIntialLoading(false)
+        setIntialLoading(false);
         console.log(err, "couldnt fetch suggested clothes");
       }
     };
@@ -47,18 +50,14 @@ const SwipePage = ({ setFavourites }) => {
         const existingUserPreferences = JSON.parse(
           userFromAPI.data.user.preferences
         );
-        
+
         setPreferences(existingUserPreferences);
       } catch (err) {
         console.log(err, "couldnt fetch existing user preferences");
       }
     };
 
-    // suggestedClothes(user).then(({data}) => {
-    //   setClothesData(data.suggestedClothes);
-    // }).catch((err) => console.log(err))
-
-    fetchInitialSuggestedClothes()
+    fetchInitialSuggestedClothes();
     fetchUserDataThenSetPreferences();
   }, []);
 
@@ -196,7 +195,6 @@ const SwipePage = ({ setFavourites }) => {
       });
     }
     setPreferences(newPreferences);
-    // console.log(preferences, "----preferences after delete");
   };
 
   // GESTURES
@@ -209,10 +207,8 @@ const SwipePage = ({ setFavourites }) => {
   const handleSwipe = (preference) => {
     console.log(index);
     if (preference === 1) {
-      //console.log("like");
       addToPreferences(clothesData[index]);
     } else {
-      //console.log("nope");
       removeFromPreferences(clothesData[index]);
     }
     setIndex((currentIndex) => currentIndex + 1);
@@ -223,23 +219,34 @@ const SwipePage = ({ setFavourites }) => {
     setIndex((currentIndex) => currentIndex - 1);
   };
 
-  const handleDoubleTap = (card) => {
+  const handleDoubleTap = () => {
     const myTime = new Date();
     const mySec = myTime.getTime();
     if (mySec - lastTime < 250) {
-      handleAddToFavorite(card);
-      setTapCount(2);
+      handleAddToFavorite(clothesData[index]);
     }
     setLastTime(mySec);
   };
 
   const handleAddToFavorite = (card) => {
-    //console.log("Added to favourite");
+    console.log("double tap");
+    setTapCount(2);
     setFavourites((currCards) => [card, ...currCards]);
-    //console.log(card);
     handleSwipeOnPress(1);
-    setTapCount(0);
+    setTimeout(() => {
+      setTapCount(0);
+      setIsPressed(false);
+    }, 500);
   };
+
+  // animation of adding to Favourites
+  useEffect(() => {
+    if (tapCount === 2) {
+      setIsPressed(true);
+      favAnimation.current.play(27, 5);
+      favAnimation.current.play(5, 27);
+    }
+  }, [tapCount]);
 
   //added some error handling if img_url undefined
   const Card = ({ card }) => {
@@ -284,7 +291,7 @@ const SwipePage = ({ setFavourites }) => {
         />
         <IconButton
           icon={(props) => <Icon name="heart" {...props} />}
-          color={colors.red}
+          color={colors.darkviolet}
           size={30}
           backgroundColor={colors.white}
           borderWidth={1}
@@ -295,7 +302,9 @@ const SwipePage = ({ setFavourites }) => {
     );
   };
 
-  return intialLoading ? <LoadingSpinner/> : (
+  return intialLoading ? (
+    <LoadingSpinner />
+  ) : (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (
@@ -306,40 +315,50 @@ const SwipePage = ({ setFavourites }) => {
       )}
       {!error && (
         <>
-          <Swiper
-            ref={swiperRef}
-            cards={clothesData}
-            cardIndex={index}
-            renderCard={(card) => <Card card={card} />}
-            onSwipedRight={() => handleSwipe(1)}
-            onSwipedLeft={() => handleSwipe(-1)}
-            onTapCard={(cardIndex) => handleDoubleTap(clothesData[cardIndex])}
-            stackSize={5}
-            stackSeparation={10}
-            infinite={false}
-            backgroundColor={colors.white}
-            verticalSwipe={false}
-            disableBottomSwipe
-            disableTopSwipe
-            style={styles.swiper}
-            animateCardOpacity
-            overlayLabels={{
-              left: {
-                title: "NOPE",
-                style: {
-                  label: styles.overlayLabelsLeftLabel,
-                  wrapper: styles.overlayLabelsLeftWrapper,
+          <View style={styles.swiperView}>
+            {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
+            <LottieView
+              style={[styles.heartLottie, !isPressed && { display: "none" }]}
+              ref={favAnimation}
+              autoPlay={false}
+              loop={false}
+              source={require("../assets/lottie/like.json")}
+            />
+            <Swiper
+              ref={swiperRef}
+              cards={clothesData}
+              cardIndex={index}
+              renderCard={(card) => <Card card={card} />}
+              onSwipedRight={() => handleSwipe(1)}
+              onSwipedLeft={() => handleSwipe(-1)}
+              onTapCard={() => handleDoubleTap()}
+              stackSize={5}
+              stackSeparation={10}
+              infinite={false}
+              backgroundColor={colors.white}
+              verticalSwipe={false}
+              disableBottomSwipe
+              disableTopSwipe
+              style={styles.swiper}
+              animateCardOpacity
+              overlayLabels={{
+                left: {
+                  title: "NOPE",
+                  style: {
+                    label: styles.overlayLabelsLeftLabel,
+                    wrapper: styles.overlayLabelsLeftWrapper,
+                  },
                 },
-              },
-              right: {
-                title: "LIKE",
-                style: {
-                  label: styles.overlayLabelsRightLabel,
-                  wrapper: styles.overlayLabelsRightWrapper,
+                right: {
+                  title: "LIKE",
+                  style: {
+                    label: styles.overlayLabelsRightLabel,
+                    wrapper: styles.overlayLabelsRightWrapper,
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </View>
           <Buttons />
         </>
       )}
@@ -350,9 +369,15 @@ const SwipePage = ({ setFavourites }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    position: "relative",
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  swiperView: {
+    position: "absolute",
+    top: 0,
+    left: 0,
   },
   swiper: {
     position: "relative",
@@ -380,7 +405,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   card: {
-    flex: 0.65,
+    flex: 0.7,
     borderRadius: 20,
     justifyContent: "center",
     backgroundColor: colors.white,
@@ -413,11 +438,18 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 50,
   },
-  heartContainer: {
+
+  heartLottie: {
+    width: 200,
     position: "absolute",
     top: "30%",
-    left: "45%",
+    left: "25%",
+    backgroundColor: "transparent",
     zIndex: 500,
+    pointerEvents: "box-none",
+  },
+  loadingLottie: {
+    width: 200,
   },
 });
 

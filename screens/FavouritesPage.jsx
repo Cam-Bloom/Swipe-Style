@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   SafeAreaView,
   View,
@@ -8,44 +8,61 @@ import {
   StatusBar,
   Image,
   Pressable,
-} from 'react-native';
-import AddToBasketButton from '../components/AddToBasketButton';
-import RemoveFavouriteButton from '../components/RemoveFavouriteButton';
+} from "react-native";
+import { colors } from "../utils/variables.js";
+import AddToBasketButton from "../components/AddToBasketButton";
+import RemoveFavouriteButton from "../components/RemoveFavouriteButton";
 
-const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavourites }) => {
+const FavouritesPage = ({
+  navigation,
+  basket,
+  setBasket,
+  favourites,
+  setFavourites,
+}) => {
   const handleNavigateToBasketPage = () => {
-    navigation.navigate('Basket');
+    navigation.navigate("Basket");
   };
 
-  const renderItem = ({item}) => {
-    console.log(item)
+  const renderItem = ({ item }) => {
+    console.log(item);
     return (
-        <View style={styles.item}>
-          <View style={styles.top}>
-            <RemoveFavouriteButton setFavourites={setFavourites} favouriteId={item.favourite_id} />
+      <View style={styles.item}>
+        <View style={styles.bottom}>
+          <View style={styles.left}>
+            <View style={styles.description}>
+              <Text style={styles.title}>{item.title}</Text>
+              <View style={styles.category}>
+                <Text style={styles.categoryTitle}>category: </Text>
+                <Text style={styles.categoryValue}>{item.category}</Text>
+              </View>
+            </View>
+            <View style={styles.price}>
+              <Text style={styles.priceTitle}>price: </Text>
+              <Text style={styles.priceValue}>{item.price}</Text>
+            </View>
           </View>
-          <View style={styles.bottom}>
-            <View style={styles.left}>
-              <View style={styles.description}>
-                <Text style={styles.title}>{item.title}</Text>
-                <View style={styles.category}>
-                  <Text style={styles.categoryTitle}>category: </Text>
-                  <Text style={styles.categoryValue}>{item.category}</Text>
-                </View>
-              </View>
-              <View style={styles.price}>
-                <Text style={styles.priceTitle}>price: </Text>
-                <Text style={styles.priceValue}>{item.price}</Text>
-              </View>
-            </View>
-            <View style={styles.right}>
-              <Image style={styles.productImage} source={{
-                        uri: `https://${item.item_img_url}`
-                      }} />
-              <AddToBasketButton basket={basket} setBasket={setBasket} clothes={item} />
-            </View>
+          <View style={styles.right}>
+            <Image
+              style={styles.productImage}
+              source={{
+                uri: `https://${item.item_img_url}`,
+              }}
+            />
           </View>
         </View>
+        <View style={styles.buttonArea}>
+          <AddToBasketButton
+            basket={basket}
+            setBasket={setBasket}
+            clothes={item}
+          />
+          <RemoveFavouriteButton
+            setFavourites={setFavourites}
+            favouriteId={item.favourite_id}
+          />
+        </View>
+      </View>
     );
   };
 
@@ -54,10 +71,13 @@ const FavouritesPage = ({ navigation, basket, setBasket, favourites,  setFavouri
       <FlatList
         data={favourites}
         renderItem={renderItem}
-        keyExtractor={item =>item.clothes_id}
+        keyExtractor={(item) => item.clothes_id}
       />
       <View>
-        <Pressable style={styles.viewBasketButton} onPress={handleNavigateToBasketPage}>
+        <Pressable
+          style={styles.viewBasketButton}
+          onPress={handleNavigateToBasketPage}
+        >
           <Text style={styles.viewBasketTitle}>View Basket</Text>
         </Pressable>
       </View>
@@ -69,106 +89,109 @@ const styles = StyleSheet.create({
   container: {
     flex: 2,
     marginTop: StatusBar.currentHeight || 0,
+    justifyContent: "center",
+    backgroundColor: colors.white,
   },
   item: {
-    backgroundColor: '#F6F3F1',
-    borderWidth: 3,
-    borderRadius: 5,
-    borderColor: '#606476',
+    backgroundColor: colors.lightgrey,
+    borderWidth: 1,
+    borderRadius: 20,
+    borderColor: colors.border,
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 8,
   },
   top: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
+    flexDirection: "row",
+    justifyContent: "flex-end",
   },
   bottom: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   title: {
-    fontSize: 25,
+    fontSize: 20,
     paddingRight: 5,
-    fontWeight: 'bold',
-    color: '#606476',
+    fontWeight: "bold",
+    color: colors.darkgrey,
   },
   productImage: {
-		width: 130,
-		height: 130,
-		marginBottom: 10,
-		borderRadius: 10,
-	},
+    width: "auto",
+    height: 160,
+    marginBottom: 10,
+    borderRadius: 10,
+  },
   viewBasketButton: {
-    height: 45,
-    width: 250,
-    alignItems: 'center',
+    alignItems: "center",
     borderRadius: 8,
     elevation: 3,
-    backgroundColor: '#EE6E29',
-    marginLeft: 80,
+    backgroundColor: colors.darkviolet,
+    marginLeft: 16,
+    marginRight: 16,
     marginTop: 5,
     marginBottom: 5,
   },
   viewBasketTitle: {
     fontSize: 20,
-    lineHeight: 21,
-    fontWeight: 'bold',
+    lineHeight: 26,
+    fontWeight: "bold",
     letterSpacing: 0.25,
-    color: 'white',
+    color: colors.white,
     padding: 12,
   },
   button: {
-    height: 65,
-    alignItems: 'center',
+    alignItems: "center",
     paddingVertical: 10,
     paddingHorizontal: 32,
     borderRadius: 8,
     elevation: 6,
-    backgroundColor: '#008C83',
+    backgroundColor: colors.green,
   },
   text: {
-      fontSize: 16,
-      lineHeight: 21,
-      fontWeight: 'bold',
-      letterSpacing: 0.25,
-      color: 'white',
+    fontSize: 16,
+    lineHeight: 22,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: colors.white,
   },
   left: {
     flex: 3,
-    justifyContent: 'space-around',
+    justifyContent: "space-around",
   },
   right: {
     flex: 2,
-    justifyContent: 'center',
+    justifyContent: "center",
   },
   description: {
     paddingBottom: 10,
   },
   price: {
-    flexDirection: 'row',
+    flexDirection: "row",
   },
   priceTitle: {
-    fontSize: 20,
-    color: '#606476',
+    fontSize: 16,
+    color: colors.darkgrey,
   },
   priceValue: {
-    color: '#B8354E',
-    fontSize: 20,
-    fontWeight: 'bold',
+    color: colors.darkgrey,
+    fontSize: 16,
+    fontWeight: "bold",
   },
   category: {
-    marginTop: 15,
-    flexDirection: 'row',
+    marginTop: 16,
+    flexDirection: "row",
   },
   categoryTitle: {
-    color: '#606476',
-    fontSize: 15,
+    color: colors.darkgrey,
+    fontSize: 16,
   },
   categoryValue: {
-    color: '#B4A6AB',
-    fontWeight: 'bold',
-    fontSize: 15,
+    color: colors.darkgrey,
+    fontSize: 16,
+  },
+  buttonArea: {
+    marginTop: 20,
+    flexDirection: "row",
   },
 });
 
