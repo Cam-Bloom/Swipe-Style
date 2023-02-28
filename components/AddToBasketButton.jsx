@@ -1,20 +1,27 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Pressable, Text } from 'react-native';
 import { patchClothesCount, postClothesToBasket} from '../utils/api';
 
 const AddToBasketButton = ({ basket, setBasket, clothes }) => {
-	const [count, setCount] = useState(0);
+	const [isAddedToBasket, setIsAddedToBasket] = useState(false);
 
 	//just hardcoded userId temporarily => this should be changed later
 	const [userId, setUserId] = useState("12342341")
+
+	useEffect(() => {
+		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes.clothes_id);
+		if (existingClothes) {
+			setIsAddedToBasket(true);
+		}
+	}, []);
 
 	const addNewClothesToBasket = () => {
 		const currentBasket = [...basket];
 		const existingClothes = currentBasket.filter(x => x.clothes_id === clothes.clothes_id);
 
-		setCount(count + 1);
-
 		if (existingClothes.length > 0) {
+			setIsAddedToBasket(true);
+
 			patchClothesCount(existingClothes[0].basket_id, {clothes_count: 1})
 				.then((clothesWithIncreasedCount) => {
 					currentBasket.forEach(item => {
@@ -26,7 +33,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 					setBasket(currentBasket);
 				})
 				.catch((err) => {
-					setCount(count - 1);
+					setIsAddedToBasket(false);
 
 				// need to add error handling here
 				console.log("clothes count hasn't been updated");
@@ -48,10 +55,8 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 					}
 
 					setBasket(currentBasket => [newClothesAddedToBasket, ...basket]);
-					setCount(count + 1);
 			})
 			.catch((err) => {
-				setCount(count - 1);
 				// need to add error handling here
 				console.log("clothes hasn't been added to basket");
 				console.log(err);
@@ -60,14 +65,16 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 	};
 
   return (
-	<Pressable style={styles.button} onPress={() => addNewClothesToBasket()}>
-      <Text style={styles.text}>Add to basket ({count})</Text>
-    </Pressable>
+		<View>
+			{!isAddedToBasket} 
+				? <Pressable style={styles.adderButton} onPress={() => addNewClothesToBasket()}> <Text style={styles.text}>Add to basket</Text></Pressable>
+				: <Pressable style={styles.removerButton} onPress={() => removeClothesFromBasket()}><Text style={styles.text}>Remove from basket</Text></Pressable> 
+		</View>
 	);
 };
 
 const styles = StyleSheet.create({
-	button: {
+	adderButton: {
     height: 65,
     alignItems: 'center',
     paddingVertical: 10,
@@ -76,6 +83,15 @@ const styles = StyleSheet.create({
     elevation: 6,
     backgroundColor: '#008C83',
   },
+	removerButton: {
+		height: 65,
+    alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 18,
+    borderRadius: 8,
+    elevation: 6,
+    backgroundColor: '#B8354E',
+	},
   text: {
       fontSize: 18,
       lineHeight: 21,
@@ -83,6 +99,7 @@ const styles = StyleSheet.create({
       letterSpacing: 0.25,
       color: 'white',
   },
+
 });
 
 export default AddToBasketButton;
