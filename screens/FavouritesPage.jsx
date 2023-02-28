@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   SafeAreaView,
   View,
@@ -9,67 +9,59 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import { IconButton } from "@react-native-material/core";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { colors } from "../utils/variables.js";
+import AddToBasketButton from "../components/AddToBasketButton";
+import RemoveFavouriteButton from "../components/RemoveFavouriteButton";
 
-const FavouritesPage = ({ navigation, setBasket, favourites }) => {
+const FavouritesPage = ({
+  navigation,
+  basket,
+  setBasket,
+  favourites,
+  setFavourites,
+}) => {
   const handleNavigateToBasketPage = () => {
     navigation.navigate("Basket");
   };
 
-  const handleAddToBasketButton = (item) => {
-    setBasket((currentBasket) => [item, ...currentBasket]);
-  };
-
   const renderItem = ({ item }) => {
+    console.log(item);
     return (
       <View style={styles.item}>
-        <View style={styles.left}>
-          <View style={styles.description}>
-            <Text style={styles.title}>{item.title}</Text>
-            <View style={styles.category}>
-              <Text style={styles.categoryTitle}>category: </Text>
-              <Text style={styles.categoryValue}>{item.category}</Text>
+        <View style={styles.bottom}>
+          <View style={styles.left}>
+            <View style={styles.description}>
+              <Text style={styles.title}>{item.title}</Text>
+              <View style={styles.category}>
+                <Text style={styles.categoryTitle}>category: </Text>
+                <Text style={styles.categoryValue}>{item.category}</Text>
+              </View>
+            </View>
+            <View style={styles.price}>
+              <Text style={styles.priceTitle}>price: </Text>
+              <Text style={styles.priceValue}>{item.price}</Text>
             </View>
           </View>
-          <View style={styles.price}>
-            <Text style={styles.priceTitle}>price: </Text>
-            <Text style={styles.priceValue}>{item.price}</Text>
+          <View style={styles.right}>
+            <Image
+              style={styles.productImage}
+              source={{
+                uri: `https://${item.item_img_url}`,
+              }}
+            />
           </View>
         </View>
-        <View style={styles.right}>
-          <Image
-            style={styles.productImage}
-            source={{
-              uri: `https://${item.item_img_url}`,
-            }}
+        <View style={styles.buttonArea}>
+          <AddToBasketButton
+            basket={basket}
+            setBasket={setBasket}
+            clothes={item}
           />
-          <Pressable
-            style={styles.button}
-            onPress={() => handleAddToBasketButton(item)}
-          >
-            <Text style={styles.text}>Add to basket</Text>
-          </Pressable>
+          <RemoveFavouriteButton
+            setFavourites={setFavourites}
+            favouriteId={item.favourite_id}
+          />
         </View>
-        {/* ICON BUTTONS: BASKET AND REMOVE */}
-        {/* <View style={styles.buttonArea}>
-          <IconButton
-            icon={(props) => (
-              <Icon name="shopping-basket" color={colors.white} size={25} />
-            )}
-            backgroundColor={colors.green}
-            onPress={() => handleAddToBasketButton(item)}
-          />
-          <IconButton
-            icon={(props) => (
-              <Icon name="remove" color={colors.white} size={25} />
-            )}
-            color={colors.darkgrey}
-            backgroundColor={colors.violet}
-            onPress={() => {}}
-          />
-        </View> */}
       </View>
     );
   };
@@ -95,7 +87,7 @@ const FavouritesPage = ({ navigation, setBasket, favourites }) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 2,
     marginTop: StatusBar.currentHeight || 0,
     justifyContent: "center",
     backgroundColor: colors.white,
@@ -108,6 +100,13 @@ const styles = StyleSheet.create({
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 8,
+  },
+  top: {
+    flex: 1,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  bottom: {
     flexDirection: "row",
   },
   title: {
@@ -117,8 +116,8 @@ const styles = StyleSheet.create({
     color: colors.darkgrey,
   },
   productImage: {
-    width: 130,
-    height: 130,
+    width: "auto",
+    height: 160,
     marginBottom: 10,
     borderRadius: 10,
   },
@@ -163,10 +162,6 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: "center",
   },
-  buttonArea: {
-    flex: 1,
-    flexDirection: "row",
-  },
   description: {
     paddingBottom: 10,
   },
@@ -193,6 +188,10 @@ const styles = StyleSheet.create({
   categoryValue: {
     color: colors.darkgrey,
     fontSize: 16,
+  },
+  buttonArea: {
+    marginTop: 20,
+    flexDirection: "row",
   },
 });
 

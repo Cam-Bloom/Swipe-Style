@@ -1,5 +1,5 @@
 import React, { useState, useRef, createRef, useEffect } from "react";
-import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, Image } from "react-native";
 import Icon from "react-native-vector-icons/AntDesign";
 import data from "../data.js";
 import Swiper from "react-native-deck-swiper";
@@ -11,8 +11,12 @@ import {
   patchUserPreferences,
   getUser,
 } from "../utils/api.js";
+import { useContext } from "react";
+import { UserContext } from "../contexts/userContext";
+import LoadingSpinner from "../components/LoadingSpinner.jsx";
 
 const SwipePage = ({ setFavourites }) => {
+  const { user } = useContext(UserContext);
   const swiperRef = createRef();
   const favAnimation = useRef(null);
   const [clothesData, setClothesData] = useState(data);
@@ -22,28 +26,31 @@ const SwipePage = ({ setFavourites }) => {
   const [preferences, setPreferences] = useState({});
   const [error, setError] = useState(null);
   const [isPressed, setIsPressed] = useState(false);
-  const [isLoadingClothes, setLoadingClothes] = useState(true);
+  const [intialLoading, setIntialLoading] = useState(false);
 
   //this fetches the initial array of 10 items. user.uid needs passing in
   //this gets the user object from the api, the user object will be passed in here and the user.uid will be put in the getUser
   useEffect(() => {
     const fetchInitialSuggestedClothes = async () => {
+      setIntialLoading(true);
       try {
-        const clothesFromAPI = await suggestedClothes(32342341);
+        const clothesFromAPI = await suggestedClothes(user);
         setClothesData(clothesFromAPI.data.suggestedClothes);
-        setLoadingClothes(false);
+        setIntialLoading(false);
       } catch (err) {
         setError(err);
+        setIntialLoading(false);
         console.log(err, "couldnt fetch suggested clothes");
       }
     };
 
     const fetchUserDataThenSetPreferences = async () => {
       try {
-        const userFromAPI = await getUser(32342341);
+        const userFromAPI = await getUser(user);
         const existingUserPreferences = JSON.parse(
           userFromAPI.data.user.preferences
         );
+
         setPreferences(existingUserPreferences);
       } catch (err) {
         console.log(err, "couldnt fetch existing user preferences");
@@ -58,7 +65,7 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     const fetchSuggestedClothesAndConcat = async () => {
       try {
-        const clothesFromAPI = await suggestedClothes(32342341);
+        const clothesFromAPI = await suggestedClothes(user);
         const newData = clothesData.concat(
           clothesFromAPI.data.suggestedClothes
         );
@@ -71,8 +78,8 @@ const SwipePage = ({ setFavourites }) => {
     const patchUserPreferencesUseEffect = async () => {
       try {
         const data = JSON.stringify(preferences);
-        const res = await patchUserPreferences(32342341, { preferences: data });
-        console.log(res.data.user.preferences, "---- reply from server");
+        const res = await patchUserPreferences(user, { preferences: data });
+        // console.log(res.data.user.preferences, "---- reply from server");
       } catch (err) {
         console.log(err);
       }
@@ -295,7 +302,9 @@ const SwipePage = ({ setFavourites }) => {
     );
   };
 
-  return (
+  return intialLoading ? (
+    <LoadingSpinner />
+  ) : (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (
@@ -306,60 +315,50 @@ const SwipePage = ({ setFavourites }) => {
       )}
       {!error && (
         <>
-          {/* DISPLAY LOADING ANIMATION */}
-          {isLoadingClothes ? (
+          <View style={styles.swiperView}>
+            {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
             <LottieView
-              style={styles.loadingLottie}
-              autoPlay={true}
-              loop={true}
-              source={require("../assets/lottie/loading.json")}
+              style={[styles.heartLottie, !isPressed && { display: "none" }]}
+              ref={favAnimation}
+              autoPlay={false}
+              loop={false}
+              source={require("../assets/lottie/like.json")}
             />
-          ) : (
-            <View style={styles.swiperView}>
-              {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
-              <LottieView
-                style={[styles.heartLottie, !isPressed && { display: "none" }]}
-                ref={favAnimation}
-                autoPlay={false}
-                loop={false}
-                source={require("../assets/lottie/like.json")}
-              />
-              <Swiper
-                ref={swiperRef}
-                cards={clothesData}
-                cardIndex={index}
-                renderCard={(card) => <Card card={card} />}
-                onSwipedRight={() => handleSwipe(1)}
-                onSwipedLeft={() => handleSwipe(-1)}
-                onTapCard={() => handleDoubleTap()}
-                stackSize={5}
-                stackSeparation={10}
-                infinite={false}
-                backgroundColor={colors.white}
-                verticalSwipe={false}
-                disableBottomSwipe
-                disableTopSwipe
-                style={styles.swiper}
-                animateCardOpacity
-                overlayLabels={{
-                  left: {
-                    title: "NOPE",
-                    style: {
-                      label: styles.overlayLabelsLeftLabel,
-                      wrapper: styles.overlayLabelsLeftWrapper,
-                    },
+            <Swiper
+              ref={swiperRef}
+              cards={clothesData}
+              cardIndex={index}
+              renderCard={(card) => <Card card={card} />}
+              onSwipedRight={() => handleSwipe(1)}
+              onSwipedLeft={() => handleSwipe(-1)}
+              onTapCard={() => handleDoubleTap()}
+              stackSize={5}
+              stackSeparation={10}
+              infinite={false}
+              backgroundColor={colors.white}
+              verticalSwipe={false}
+              disableBottomSwipe
+              disableTopSwipe
+              style={styles.swiper}
+              animateCardOpacity
+              overlayLabels={{
+                left: {
+                  title: "NOPE",
+                  style: {
+                    label: styles.overlayLabelsLeftLabel,
+                    wrapper: styles.overlayLabelsLeftWrapper,
                   },
-                  right: {
-                    title: "LIKE",
-                    style: {
-                      label: styles.overlayLabelsRightLabel,
-                      wrapper: styles.overlayLabelsRightWrapper,
-                    },
+                },
+                right: {
+                  title: "LIKE",
+                  style: {
+                    label: styles.overlayLabelsRightLabel,
+                    wrapper: styles.overlayLabelsRightWrapper,
                   },
-                }}
-              />
-            </View>
-          )}
+                },
+              }}
+            />
+          </View>
           <Buttons />
         </>
       )}
