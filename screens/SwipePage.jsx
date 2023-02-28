@@ -15,7 +15,6 @@ import {UserContext} from '../contexts/userContext'
 
 const SwipePage = ({ setFavourites }) => {
   const {user} = useContext(UserContext)
-  console.log(user)
   const swiperRef = createRef();
   const [clothesData, setClothesData] = useState(data);
   const [index, setIndex] = useState(1);
