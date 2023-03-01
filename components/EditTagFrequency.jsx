@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, ToastAndroid } from "react-native";
 import { Button } from "@react-native-material/core";
 import { getUser, patchUserPreferences } from "../utils/api";
 import { UserContext } from "../contexts/userContext";
@@ -11,7 +11,7 @@ const DeveloperSettings = () => {
   return (
     <View style={styles.margin}>
       <Button
-       color={colors.darkviolet}
+        color={colors.darkviolet}
         title="Developer Settings"
         onPress={() => setShowEditTagFrequency(!showEditTagFrequency)}
       />
@@ -36,7 +36,11 @@ const EditTagFrequency = () => {
         setPreferences(existingUserPreferences);
         setTopAndRandom(existingUserPreferences.topAndRandom);
       } catch (err) {
-        console.log(err, "couldnt fetch existing user preferenceser");
+        console.log(err, "Couldnt fetch existing user preferences");
+        ToastAndroid.show(
+          "Error: Couldnt fetch existing user preferences",
+          ToastAndroid.SHORT
+        );
       }
     };
 
@@ -66,20 +70,24 @@ const EditTagFrequency = () => {
         preferences: updatedPreferencesString,
       });
       console.log("preferences updated success:");
+      ToastAndroid.show("Preferences updated successfully", ToastAndroid.SHORT);
     } catch (err) {
       console.error("error updating preferences:", err);
+      ToastAndroid.show("Error updating preferences", ToastAndroid.SHORT);
     }
   };
 
+  const topAndRandomArray = Object.keys(topAndRandom).sort();
+
   return (
     <View>
-      {Object.keys(topAndRandom).map((key) => (
-        <View key={key}>
+      {topAndRandomArray.map((key, index) => (
+        <View key={index}>
           <View style={styles.rows}>
             <Text>{key} top:</Text>
             <View style={styles.buttonContainer}>
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -93,7 +101,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -106,7 +114,7 @@ const EditTagFrequency = () => {
             <Text>{key} random:</Text>
             <View style={styles.buttonContainer}>
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -120,7 +128,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -132,7 +140,7 @@ const EditTagFrequency = () => {
         </View>
       ))}
 
-      <Button color={colors.darkviolet}  title="Submit" onPress={handleSubmit} />
+      <Button color={colors.darkviolet} title="Submit" onPress={handleSubmit} />
     </View>
   );
 };
