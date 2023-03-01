@@ -232,20 +232,31 @@ const SwipePage = ({ setFavourites }) => {
   const handleAddToFavorite = async (card) => {
     console.log("double tap");
     setTapCount(2);
-    try {
-      setFavourites((currCards) => [card, ...currCards]);
+    try { 
       handleSwipeOnPress(1);
       setTimeout(() => {
         setTapCount(0);
         setIsPressed(false);
       }, 500);
-      const res = await postFavouritesByUserId(user, card.clothes_id);
-      // console.log(res.data);
+
+      postFavouritesByUserId(user, card.clothes_id)
+        .then((clothesAddedToFavourites) => {
+          const { favourite } = clothesAddedToFavourites.data;
+
+          const newClothesAddedToFavourites = {
+            "favourite_id": favourite.favourite_id,
+						"clothes_id": favourite.clothes_id,
+						"uid": favourite.uid,
+						"title": card.title,
+            "category": card.category,
+						"item_img_url": card.item_img_url,
+						"price": card.price,
+          };
+
+          setFavourites((currCards) => [newClothesAddedToFavourites, ...currCards]);
+        })
     } catch (err) {
-      setFavourites((currCards) =>
-        currCards.filter((item) => item.clothes_id !== card.clothes_id)
-      );
-      console.log(err);
+        console.log(err);
     }
   };
 

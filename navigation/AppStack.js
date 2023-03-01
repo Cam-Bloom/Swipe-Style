@@ -17,8 +17,6 @@ export default function App() {
 
   const { user } = useContext(UserContext);
 
-//   const [userId, setUserId] = useState("12342341");
-	console.log(user);
   useEffect(() => {
     getFavouritesByUserId(user)
       .then((favouritesFromApi) => {
@@ -63,6 +61,7 @@ export default function App() {
             basket={basket}
             setBasket={setBasket}
             favourites={favourites}
+            setFavourites={setFavourites}
             {...props}
           />
         )}
