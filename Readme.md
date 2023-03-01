@@ -8,7 +8,6 @@ Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover 
   <img src="https://s9.gifyu.com/images/clothes-tinder.gif" />
 </p>
 
-![Swipe Style Demo](https://s9.gifyu.com/images/clothes-tinder.gif)
 
 ## Developed By
 
@@ -38,6 +37,10 @@ One of the unique features of Swipe Style is the way it learns from your prefere
 - Shopping cart: Add items to your cart for purchase and easily check out when you're ready to buy.
 
 ## Technology used
+
+<p align="center">
+ [![My Skills](https://skillicons.dev/icons?i=js,react,nodejs,express,postgresql,firebase,git)](https://skillicons.dev)
+</p>
 
 [![My Skills](https://skillicons.dev/icons?i=js,react,nodejs,express,postgresql,firebase,git)](https://skillicons.dev)
 
