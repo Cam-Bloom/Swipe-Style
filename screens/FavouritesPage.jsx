@@ -40,6 +40,20 @@ const FavouritesPage = ({
               <Text style={styles.priceTitle}>price: </Text>
               <Text style={styles.priceValue}>{item.price}</Text>
             </View>
+              <View style={styles.buttonArea}>
+                <View  style={styles.buttonAddBasket}>
+                <AddToBasketButton
+                  basket={basket}
+                  setBasket={setBasket}
+                  clothes={item}
+                />
+                </View>
+                <RemoveFavouriteButton
+                  style={styles.buttonRemove}
+                  setFavourites={setFavourites}
+                  favouriteId={item.favourite_id}
+                />
+              </View>
           </View>
           <View style={styles.right}>
             <Image
@@ -49,18 +63,6 @@ const FavouritesPage = ({
               }}
             />
           </View>
-        </View>
-        <View style={styles.buttonArea}>
-          <AddToBasketButton
-            basket={basket}
-            setBasket={setBasket}
-            clothes={item}
-          />
-          <RemoveFavouriteButton
-            style={styles.buttonRemove}
-            setFavourites={setFavourites}
-            favouriteId={item.favourite_id}
-          />
         </View>
       </View>
     );
@@ -110,7 +112,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     paddingRight: 5,
     fontWeight: "bold",
     color: colors.darkgrey,
@@ -163,7 +165,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   description: {
-    paddingBottom: 10,
+    // paddingBottom: 10,
   },
   price: {
     flexDirection: "row",
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   category: {
-    marginTop: 16,
+    marginTop: 6,
     flexDirection: "row",
   },
   categoryTitle: {
@@ -190,12 +192,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   buttonArea: {
-    marginTop: 20,
+    marginTop: 10,
     flexDirection: "row",
   },
   buttonRemove:{
     color:colors.darkviolet,
     marginLeft: 20,
+  },
+  buttonAddBasket:{
+    marginRight:15,
   }
 });
 
