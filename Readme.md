@@ -56,7 +56,7 @@ For data storage, we have used PostgreSQL, which is hosted on ElephantSQL and ac
 
 - NodeJS installed (Latest LTS recommended)
 - React Native CLI installed globally (npm install -g react-native-cli)
-- Optional: Android Studio or Mac equivalent
+- Either Android Studio and an emulated phone, or a mobile phone with the Expo Go application 
 
 ## Installation
 
