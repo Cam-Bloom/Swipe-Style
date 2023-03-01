@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, StyleSheet, Pressable, Text } from 'react-native';
 import { postClothesToBasket, deleteClothesFromBasket } from '../utils/api';
+import { UserContext } from "../contexts/userContext";
 
 const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 	const currentBasket = [...basket];
@@ -9,8 +10,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 	const [isAddedToBasket, setIsAddedToBasket] = useState(existingClothes?.length > 0 ? true : false);
 	const [existingClothesInBasket, setExistingClothesInBasket] = useState(existingClothes[0]);
 
-	//just hardcoded userId temporarily => this should be changed later
-	const [userId, setUserId] = useState("12342341");
+	const { user } = useContext(UserContext);
 
 	useEffect(() => {
 		const currentUpdatedBasket = [...basket];
@@ -28,7 +28,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 	const addNewClothesToBasket = () => {
 		setIsAddedToBasket(true);
 
-			postClothesToBasket(userId, {clothes_id: clothes.clothes_id})
+			postClothesToBasket(user, {clothes_id: clothes.clothes_id})
 				.then((clothesAddedToBasket) => {
 					const { clothesBasket } = clothesAddedToBasket.data;
 
