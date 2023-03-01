@@ -253,8 +253,8 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (tapCount === 2) {
       setIsPressed(true);
-      favAnimation.current.play(27, 5);
       favAnimation.current.play(5, 27);
+      favAnimation.current.play(27, 5);
     }
   }, [tapCount]);
 
@@ -314,7 +314,7 @@ const SwipePage = ({ setFavourites }) => {
 
   return intialLoading ? (
     <LoadingSpinner />
-  ) :  (
+  ) : (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (
@@ -328,10 +328,9 @@ const SwipePage = ({ setFavourites }) => {
           <View style={styles.swiperView}>
             {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
             <LottieView
-              autoPlay
               ref={favAnimation}
               style={[styles.heartLottie, !isPressed && { display: "none" }]}
-              source={require("../assets/137650-geometric-figures-loading-animation.json")}
+              source={require("../assets/like-button.json")}
             />
             <Swiper
               ref={swiperRef}
@@ -451,14 +450,11 @@ const styles = StyleSheet.create({
   heartLottie: {
     width: 200,
     position: "absolute",
-    top: "30%",
-    left: "25%",
+    top: "50%",
+    left: "50%",
     backgroundColor: "transparent",
     zIndex: 500,
     pointerEvents: "box-none",
-  },
-  loadingLottie: {
-    width: 200,
   },
 });
 
