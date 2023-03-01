@@ -14,8 +14,6 @@ export default function App() {
 	const [basket, setBasket] = useState([]);
 
 	const {user} = useContext(UserContext);
-	console.log("User: ")
-	console.log(user);
 
 	//just hardcoded userId temporarily => this should be changed later
 	const [userId, setUserId] = useState("12342341");
