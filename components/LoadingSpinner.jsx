@@ -14,9 +14,8 @@ const LoadingSpinner = () => {
               style={{
                 width: 200,
                 height: 200,
-                backgroundColor: '#eee',
               }}
-              source={require("../assets/137650-geometric-figures-loading-animation.json")}
+              source={require("../assets/97930-loading.json")}
               // Change animation here
             />
       </View>

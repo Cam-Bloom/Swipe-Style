@@ -27,7 +27,7 @@ const SwipePage = ({ setFavourites }) => {
   const [preferences, setPreferences] = useState({});
   const [error, setError] = useState(null);
   const [isPressed, setIsPressed] = useState(false);
-  const [intialLoading, setIntialLoading] = useState(false);
+  const [intialLoading, setIntialLoading] = useState(true);
 
   //this fetches the initial array of 10 items. user.uid needs passing in
   //this gets the user object from the api, the user object will be passed in here and the user.uid will be put in the getUser
@@ -331,7 +331,7 @@ const SwipePage = ({ setFavourites }) => {
               autoPlay
               ref={favAnimation}
               style={[styles.heartLottie, !isPressed && { display: "none" }]}
-              source={require("../assets/137650-geometric-figures-loading-animation.json")}
+              source={require("../assets/138515-heart-animation-hd.json")}
             />
             <Swiper
               ref={swiperRef}
@@ -451,8 +451,8 @@ const styles = StyleSheet.create({
   heartLottie: {
     width: 200,
     position: "absolute",
-    top: "30%",
-    left: "25%",
+    top: "50%",
+    left: "50%",
     backgroundColor: "transparent",
     zIndex: 500,
     pointerEvents: "box-none",
