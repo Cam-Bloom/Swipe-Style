@@ -314,7 +314,7 @@ const SwipePage = ({ setFavourites }) => {
 
   return intialLoading ? (
     <LoadingSpinner />
-  ) : (
+  ) :  (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (
@@ -328,11 +328,10 @@ const SwipePage = ({ setFavourites }) => {
           <View style={styles.swiperView}>
             {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
             <LottieView
-              style={[styles.heartLottie, !isPressed && { display: "none" }]}
+              autoPlay
               ref={favAnimation}
-              autoPlay={false}
-              loop={false}
-              source={require("../assets/lottie/like.json")}
+              style={[styles.heartLottie, !isPressed && { display: "none" }]}
+              source={require("../assets/137650-geometric-figures-loading-animation.json")}
             />
             <Swiper
               ref={swiperRef}
