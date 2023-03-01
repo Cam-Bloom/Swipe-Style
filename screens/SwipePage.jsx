@@ -451,7 +451,7 @@ const styles = StyleSheet.create({
   heartLottie: {
     width: 200,
     position: "absolute",
-    top: "50%",
+    top: "75%",
     left: "50%",
     backgroundColor: "transparent",
     zIndex: 500,
