@@ -35,7 +35,7 @@ One of the unique features of Swipe Style is the way it learns from your prefere
 
 ## Technology used
 
-[![My Skills](https://skillicons.dev/icons?i=js,react,html,css,nodejs,express,postgresql,firebase,git)](https://skillicons.dev)
+[![My Skills](https://skillicons.dev/icons?i=js,react,nodejs,express,postgresql,firebase,git)](https://skillicons.dev)
 
 Swipe Style is built using React Native, a popular JavaScript framework for building cross-platform mobile apps. The app uses Firebase solely for user authentication and management.
 
