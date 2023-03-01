@@ -69,7 +69,7 @@ To install and run Swipe Style on your local machine, follow these steps:
 - Navigate to the utils/api.js file and replace the baseURL with http://localhost:3000/api (we didn't actually hide our API key).
 
 ### Firebase Auth Setup
-- To setup your own firebase authentication please head to firebase website [here](https://github.com/Superjim/clothes-backend)
+- To setup your own firebase authentication please head to firebase website [here](https://console.firebase.google.com/)
 - Click the following button
 
 <img src="https://i.imgur.com/iDpvlE2.png" alt="Firebase New Project" height=200/>
