@@ -120,7 +120,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 
 const styles = StyleSheet.create({
   adderToBasket: {
-    marginRight: 10,
+    marginRight: 20,
   },
 });
 
