@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { StyleSheet, View, Text, TextInput, ToastAndroid } from "react-native";
 import { Button } from "@react-native-material/core";
 import { getUser, patchUserPreferences } from "../utils/api";
 import { UserContext } from "../contexts/userContext";
@@ -34,7 +34,11 @@ const EditTagFrequency = () => {
         setPreferences(existingUserPreferences);
         setTopAndRandom(existingUserPreferences.topAndRandom);
       } catch (err) {
-        console.log(err, "couldnt fetch existing user preferenceser");
+        console.log(err, "Couldnt fetch existing user preferences");
+        ToastAndroid.show(
+          "Error: Couldnt fetch existing user preferences",
+          ToastAndroid.SHORT
+        );
       }
     };
 
@@ -64,8 +68,10 @@ const EditTagFrequency = () => {
         preferences: updatedPreferencesString,
       });
       console.log("preferences updated success:");
+      ToastAndroid.show("Preferences updated successfully", ToastAndroid.SHORT);
     } catch (err) {
       console.error("error updating preferences:", err);
+      ToastAndroid.show("Error updating preferences", ToastAndroid.SHORT);
     }
   };
 
