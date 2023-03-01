@@ -88,7 +88,8 @@ const FavouritesPage = ({
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    paddingTop: StatusBar.currentHeight || 0,
+    // paddingTop: StatusBar.currentHeight || 0,
+    paddingTop: 20,
     justifyContent: "center",
     backgroundColor: colors.white,
   },
@@ -98,8 +99,8 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     borderColor: colors.border,
     padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 8,
+    marginVertical: 10,
+    marginHorizontal: 16,
   },
   top: {
     flex: 1,
@@ -193,10 +194,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
   },
-  buttonRemove:{
-    color:colors.darkviolet,
+  buttonRemove: {
+    color: colors.darkviolet,
     marginLeft: 20,
-  }
+  },
 });
 
 export default FavouritesPage;
