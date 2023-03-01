@@ -53,7 +53,7 @@ const RemoveFavouriteButton = ({ setFavourites, favouriteId }) => {
     <View>
       <IconButton
         icon={(props) => (
-          <Icon name="heart-remove" color={colors.white} size={26} />
+          <Icon name="heart-remove" color={colors.white} size={30} />
         )}
         backgroundColor={colors.darkviolet}
         onPress={() => handleRemoveItem()}
