@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput } from "react-native";
 import { Button } from "@react-native-material/core";
 import { getUser, patchUserPreferences } from "../utils/api";
 import { UserContext } from "../contexts/userContext";
+import { colors } from "../utils/variables.js";
 
 const DeveloperSettings = () => {
   const [showEditTagFrequency, setShowEditTagFrequency] = useState(false);
@@ -10,6 +11,7 @@ const DeveloperSettings = () => {
   return (
     <View style={styles.margin}>
       <Button
+       color={colors.darkviolet}
         title="Developer Settings"
         onPress={() => setShowEditTagFrequency(!showEditTagFrequency)}
       />
@@ -77,6 +79,7 @@ const EditTagFrequency = () => {
             <Text>{key} top:</Text>
             <View style={styles.buttonContainer}>
               <Button
+              color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -90,6 +93,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
+              color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -102,6 +106,7 @@ const EditTagFrequency = () => {
             <Text>{key} random:</Text>
             <View style={styles.buttonContainer}>
               <Button
+              color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -115,6 +120,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
+              color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -126,7 +132,7 @@ const EditTagFrequency = () => {
         </View>
       ))}
 
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button color={colors.darkviolet}  title="Submit" onPress={handleSubmit} />
     </View>
   );
 };

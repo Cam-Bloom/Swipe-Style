@@ -6,6 +6,8 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
 import { postUser } from "../utils/api";
 import {LoadingContext} from '../contexts/loadingContext'
+import { colors } from "../utils/variables.js";
+
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -114,6 +116,7 @@ const LoginScreen = () => {
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.textfields}>
         <TextInput
+        color={colors.darkviolet}
           label="Username"
           variant="outlined"
           leading={(props) => <Icon name="account" {...props} />}
@@ -121,6 +124,7 @@ const LoginScreen = () => {
           onChangeText={(text) => setUsername(text)}
         ></TextInput>
         <TextInput
+        color={colors.darkviolet}
           label="Name"
           variant="outlined"
           leading={(props) => <Icon name="account-details" {...props} />}
@@ -128,6 +132,7 @@ const LoginScreen = () => {
           onChangeText={(text) => setName(text)}
         ></TextInput>
         <TextInput
+        color={colors.darkviolet}
           label="Email"
           variant="outlined"
           leading={(props) => <Icon name="email" {...props} />}
@@ -135,6 +140,7 @@ const LoginScreen = () => {
           onChangeText={(text) => setEmail(text)}
         ></TextInput>
         <TextInput
+        color={colors.darkviolet}
           label="Password"
           variant="outlined"
           leading={(props) => <Icon name="lock" {...props} />}
@@ -144,7 +150,7 @@ const LoginScreen = () => {
         ></TextInput>
       </View>
       <View style={styles.buttonContainer}>
-        <Button onPress={handleSignUp} title="Create Account"></Button>
+        <Button color={colors.darkviolet} onPress={handleSignUp} title="Create Account"></Button>
       </View>
       {error && <Text style={styles.errMessage}>{error}</Text>}
     </KeyboardAvoidingView>

@@ -57,6 +57,7 @@ const FavouritesPage = ({
             clothes={item}
           />
           <RemoveFavouriteButton
+            style={styles.buttonRemove}
             setFavourites={setFavourites}
             favouriteId={item.favourite_id}
           />
@@ -192,6 +193,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
   },
+  buttonRemove:{
+    color:colors.darkviolet,
+    marginLeft: 20,
+  }
 });
 
 export default FavouritesPage;
