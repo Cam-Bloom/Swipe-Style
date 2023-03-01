@@ -10,6 +10,7 @@ import {
   suggestedClothes,
   patchUserPreferences,
   getUser,
+  postFavouritesByUserId,
 } from "../utils/api.js";
 import { useContext } from "react";
 import { UserContext } from "../contexts/userContext";
@@ -228,15 +229,24 @@ const SwipePage = ({ setFavourites }) => {
     setLastTime(mySec);
   };
 
-  const handleAddToFavorite = (card) => {
+  const handleAddToFavorite = async (card) => {
     console.log("double tap");
     setTapCount(2);
-    setFavourites((currCards) => [card, ...currCards]);
-    handleSwipeOnPress(1);
-    setTimeout(() => {
-      setTapCount(0);
-      setIsPressed(false);
-    }, 500);
+    try {
+      setFavourites((currCards) => [card, ...currCards]);
+      handleSwipeOnPress(1);
+      setTimeout(() => {
+        setTapCount(0);
+        setIsPressed(false);
+      }, 500);
+      const res = await postFavouritesByUserId(user, card.clothes_id);
+      // console.log(res.data);
+    } catch (err) {
+      setFavourites((currCards) =>
+        currCards.filter((item) => item.clothes_id !== card.clothes_id)
+      );
+      console.log(err);
+    }
   };
 
   // animation of adding to Favourites

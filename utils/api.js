@@ -32,6 +32,10 @@ export const getFavouritesByUserId = (userId) => {
   return clothesAPI.get(`/favourites/${userId}`);
 }
 
+export const postFavouritesByUserId = (userId, clothes_id) => {
+  return clothesAPI.post(`/favourites/${userId}`, {clothes_id});
+}
+
 export const deleteClothesFromFavourites = (favouriteId) => {
   return clothesAPI.delete(`/favourites/${favouriteId}`);
 }
