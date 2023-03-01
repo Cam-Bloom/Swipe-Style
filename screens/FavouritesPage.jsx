@@ -24,8 +24,7 @@ const FavouritesPage = ({
     navigation.navigate("Basket");
   };
 
-  const renderItem = ({ item }) => {
-    console.log(item);
+  const renderItem = ({item}) => {
     return (
       <View style={styles.item}>
         <View style={styles.bottom}>

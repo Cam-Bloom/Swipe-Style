@@ -17,6 +17,8 @@ export default function App() {
 
   const { user } = useContext(UserContext);
 
+//   const [userId, setUserId] = useState("12342341");
+	console.log(user);
   useEffect(() => {
     getFavouritesByUserId(user)
       .then((favouritesFromApi) => {
@@ -70,7 +72,7 @@ export default function App() {
       />
       <Tab.Screen
         name="Basket"
-        children={(props) => <BasketPage basket={basket} {...props} />}
+        children={(props) => <BasketPage basket={basket} setBasket={setBasket} {...props} />}
         options={{
           tabBarIcon: () => <Icon name="shoppingcart" size={25} />,
         }}
