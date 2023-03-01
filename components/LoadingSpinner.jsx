@@ -8,17 +8,16 @@ const LoadingSpinner = () => {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.container}>
-      <LottieView
-              autoPlay
-              ref={animation}
-              style={{
-                width: 200,
-                height: 200,
-                backgroundColor: '#eee',
-              }}
-              source={require("../assets/137650-geometric-figures-loading-animation.json")}
-              // Change animation here
-            />
+        <LottieView
+          autoPlay
+          ref={animation}
+          style={{
+            width: 150,
+            backgroundColor: colors.white,
+          }}
+          source={require("../assets/loading-green-dots.json")}
+          // Change animation here
+        />
       </View>
     </SafeAreaView>
   );
@@ -32,11 +31,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     backgroundColor: colors.white,
-  },
-  spinnerTextStyle: {
-    color: "#FFF",
-  },
-  loadingLottie: {
-    width: 200,
   },
 });
