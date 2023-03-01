@@ -11,7 +11,7 @@ const DeveloperSettings = () => {
   return (
     <View style={styles.margin}>
       <Button
-       color={colors.darkviolet}
+        color={colors.darkviolet}
         title="Developer Settings"
         onPress={() => setShowEditTagFrequency(!showEditTagFrequency)}
       />
@@ -77,15 +77,17 @@ const EditTagFrequency = () => {
     }
   };
 
+  const topAndRandomArray = Object.keys(topAndRandom).sort();
+
   return (
     <View>
-      {Object.keys(topAndRandom).map((key) => (
-        <View key={key}>
+      {topAndRandomArray.map((key, index) => (
+        <View key={index}>
           <View style={styles.rows}>
             <Text>{key} top:</Text>
             <View style={styles.buttonContainer}>
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -99,7 +101,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -112,7 +114,7 @@ const EditTagFrequency = () => {
             <Text>{key} random:</Text>
             <View style={styles.buttonContainer}>
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -126,7 +128,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
-              color={colors.darkviolet}
+                color={colors.darkviolet}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -138,7 +140,7 @@ const EditTagFrequency = () => {
         </View>
       ))}
 
-      <Button color={colors.darkviolet}  title="Submit" onPress={handleSubmit} />
+      <Button color={colors.darkviolet} title="Submit" onPress={handleSubmit} />
     </View>
   );
 };
