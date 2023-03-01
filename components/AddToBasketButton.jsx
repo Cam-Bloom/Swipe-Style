@@ -110,7 +110,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
             />
           )}
           size={30}
-          backgroundColor={colors.red}
+          backgroundColor={colors.darkgrey}
           onPress={() => removeClothesFromBasket()}
         />
       )}
@@ -120,7 +120,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
 
 const styles = StyleSheet.create({
   adderToBasket: {
-    marginRight: 10,
+    marginRight: 20,
   },
 });
 

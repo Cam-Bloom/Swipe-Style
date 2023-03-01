@@ -5,10 +5,9 @@
 Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover new items based on your interests. With Swipe Style, you can easily find and favourite items that you like and get suggestions for similar items based on tags.
 
 <p align="center">
-  <img src="https://s9.gifyu.com/images/clothes-tinder.gif" />
+  <img src="https://s9.gifyu.com/images/clothes-tinder.gif" height="600"/>
 </p>
 
-![Swipe Style Demo](https://s9.gifyu.com/images/clothes-tinder.gif)
 
 ## Developed By
 
@@ -39,7 +38,11 @@ One of the unique features of Swipe Style is the way it learns from your prefere
 
 ## Technology used
 
-[![My Skills](https://skillicons.dev/icons?i=js,react,nodejs,express,postgresql,firebase,git)](https://skillicons.dev)
+<p align="center">
+  <a href="https://skillicons.dev">
+    <img src="https://skillicons.dev/icons?i=js,react,nodejs,express,postgresql,firebase,git" />
+  </a>
+</p>
 
 Swipe Style is built using React Native, a popular JavaScript framework for building cross-platform mobile apps. The app uses Firebase solely for user authentication and management.
 
@@ -53,7 +56,7 @@ For data storage, we have used PostgreSQL, which is hosted on ElephantSQL and ac
 
 - NodeJS installed (Latest LTS recommended)
 - React Native CLI installed globally (npm install -g react-native-cli)
-- Optional: Android Studio or Mac equivalent
+- Either Android Studio and an emulated phone, or a mobile phone with the Expo Go application 
 
 ## Installation
 
@@ -66,7 +69,7 @@ To install and run Swipe Style on your local machine, follow these steps:
 - Navigate to the utils/api.js file and replace the baseURL with http://localhost:3000/api (we didn't actually hide our API key).
 
 ### Firebase Auth Setup
-- To setup your own firebase authentication please head to firebase website [here](https://github.com/Superjim/clothes-backend)
+- To setup your own firebase authentication please head to firebase website [here](https://console.firebase.google.com/)
 - Click the following button
 
 <img src="https://i.imgur.com/iDpvlE2.png" alt="Firebase New Project" height=200/>

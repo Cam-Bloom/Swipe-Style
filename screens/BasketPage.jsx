@@ -39,7 +39,9 @@ const BasketPage = ({ basket, setBasket }) => {
           />
         </View>
         <View style={styles.right}>
-          <Text style={styles.title}>{item.title}</Text>
+          <Text numberOfLines={4} ellipsizeMode="tail" style={styles.title}>
+            {item.title}
+          </Text>
           <Text style={styles.priceValue}>{item.price}</Text>
           <EditClothesAmountButton
             basket={basket}
@@ -91,6 +93,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 20,
     borderColor: colors.border,
+    backgroundColor: colors.lightgrey,
   },
   checkoutButton: {
     alignItems: "center",

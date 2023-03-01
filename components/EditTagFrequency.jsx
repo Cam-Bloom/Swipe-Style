@@ -87,7 +87,7 @@ const EditTagFrequency = () => {
             <Text>{key} top:</Text>
             <View style={styles.buttonContainer}>
               <Button
-                color={colors.darkviolet}
+                color={colors.darkgrey}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -95,13 +95,14 @@ const EditTagFrequency = () => {
                 }
               />
               <TextInput
+                style={styles.text}
                 value={" " + topAndRandom[key].n.toString() + " "}
                 onChangeText={(text) =>
                   handleTopAndRandomChange(key, "n", Number(text))
                 }
               />
               <Button
-                color={colors.darkviolet}
+                color={colors.darkgrey}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -114,7 +115,7 @@ const EditTagFrequency = () => {
             <Text>{key} random:</Text>
             <View style={styles.buttonContainer}>
               <Button
-                color={colors.darkviolet}
+                color={colors.darkgrey}
                 title="-"
                 style={styles.button}
                 onPress={() =>
@@ -128,7 +129,7 @@ const EditTagFrequency = () => {
                 }
               />
               <Button
-                color={colors.darkviolet}
+                color={colors.darkgrey}
                 title="+"
                 style={styles.button}
                 onPress={() =>
@@ -153,11 +154,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     margin: 2,
-    backgroundColor: "white",
-    paddingLeft: 2,
     borderRadius: 5,
   },
   buttonContainer: {
+    padding: 8,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -167,9 +167,7 @@ const styles = StyleSheet.create({
     width: 30,
     justifyContent: "center",
     alignItems: "center",
-    // borderWidth: 1,
-    // borderStyle: "solid",
-    // borderColor: "black",
+    margin: 3,
   },
   margin: {
     margin: 10,

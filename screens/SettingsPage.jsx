@@ -66,19 +66,18 @@ const SettingsPage = () => {
 
   return (
     <View style={styles.buttons}>
+      <DeveloperSettings />
       <Button
         color={colors.darkviolet}
         onPress={resetRecommendations}
-        title="Reset Recommendations?"
+        title="Reset Recommendations"
         style={styles.reset}
       ></Button>
       <Button
-        color={colors.darkviolet}
         onPress={handleSignOut}
         title="Sign Out"
         style={styles.signout}
       ></Button>
-      <DeveloperSettings />
     </View>
   );
 };
@@ -90,13 +89,17 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: colors.white,
   },
 
   reset: {
     margin: 10,
+    backgroundColor: colors.red,
   },
 
   signout: {
-    margin: 10,
+    marginTop: 10,
+    color: colors.white,
+    backgroundColor: colors.darkgrey,
   },
 });
