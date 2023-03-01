@@ -24,7 +24,7 @@ const FavouritesPage = ({
     navigation.navigate("Basket");
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <View style={styles.item}>
         <View style={styles.bottom}>
@@ -87,7 +87,7 @@ const FavouritesPage = ({
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    marginTop: StatusBar.currentHeight || 0,
+    paddingTop: StatusBar.currentHeight || 0,
     justifyContent: "center",
     backgroundColor: colors.white,
   },
