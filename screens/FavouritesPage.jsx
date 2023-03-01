@@ -24,7 +24,7 @@ const FavouritesPage = ({
     navigation.navigate("Basket");
   };
 
-  const renderItem = ({item}) => {
+  const renderItem = ({ item }) => {
     return (
       <View style={styles.item}>
         <View style={styles.bottom}>
@@ -57,6 +57,7 @@ const FavouritesPage = ({
             clothes={item}
           />
           <RemoveFavouriteButton
+            style={styles.buttonRemove}
             setFavourites={setFavourites}
             favouriteId={item.favourite_id}
           />
@@ -87,7 +88,7 @@ const FavouritesPage = ({
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    marginTop: StatusBar.currentHeight || 0,
+    paddingTop: StatusBar.currentHeight || 0,
     justifyContent: "center",
     backgroundColor: colors.white,
   },
@@ -192,6 +193,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
     flexDirection: "row",
   },
+  buttonRemove:{
+    color:colors.darkviolet,
+    marginLeft: 20,
+  }
 });
 
 export default FavouritesPage;

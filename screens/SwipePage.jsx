@@ -232,20 +232,31 @@ const SwipePage = ({ setFavourites }) => {
   const handleAddToFavorite = async (card) => {
     console.log("double tap");
     setTapCount(2);
-    try {
-      setFavourites((currCards) => [card, ...currCards]);
+    try { 
       handleSwipeOnPress(1);
       setTimeout(() => {
         setTapCount(0);
         setIsPressed(false);
       }, 500);
-      const res = await postFavouritesByUserId(user, card.clothes_id);
-      // console.log(res.data);
+
+      postFavouritesByUserId(user, card.clothes_id)
+        .then((clothesAddedToFavourites) => {
+          const { favourite } = clothesAddedToFavourites.data;
+
+          const newClothesAddedToFavourites = {
+            "favourite_id": favourite.favourite_id,
+						"clothes_id": favourite.clothes_id,
+						"uid": favourite.uid,
+						"title": card.title,
+            "category": card.category,
+						"item_img_url": card.item_img_url,
+						"price": card.price,
+          };
+
+          setFavourites((currCards) => [newClothesAddedToFavourites, ...currCards]);
+        })
     } catch (err) {
-      setFavourites((currCards) =>
-        currCards.filter((item) => item.clothes_id !== card.clothes_id)
-      );
-      console.log(err);
+        console.log(err);
     }
   };
 
@@ -253,8 +264,8 @@ const SwipePage = ({ setFavourites }) => {
   useEffect(() => {
     if (tapCount === 2) {
       setIsPressed(true);
-      favAnimation.current.play(27, 5);
       favAnimation.current.play(5, 27);
+      favAnimation.current.play(27, 5);
     }
   }, [tapCount]);
 
@@ -314,7 +325,7 @@ const SwipePage = ({ setFavourites }) => {
 
   return intialLoading ? (
     <LoadingSpinner />
-  ) :  (
+  ) : (
     <View style={styles.container}>
       {/* DISPLAY ERROR  */}
       {error && (
@@ -328,10 +339,9 @@ const SwipePage = ({ setFavourites }) => {
           <View style={styles.swiperView}>
             {/* DISPLAY ADDING TO FAVOURITES ANIMATION */}
             <LottieView
-              autoPlay
               ref={favAnimation}
               style={[styles.heartLottie, !isPressed && { display: "none" }]}
-              source={require("../assets/137650-geometric-figures-loading-animation.json")}
+              source={require("../assets/like-button.json")}
             />
             <Swiper
               ref={swiperRef}
@@ -451,14 +461,11 @@ const styles = StyleSheet.create({
   heartLottie: {
     width: 200,
     position: "absolute",
-    top: "30%",
-    left: "25%",
+    top: "50%",
+    left: "50%",
     backgroundColor: "transparent",
     zIndex: 500,
     pointerEvents: "box-none",
-  },
-  loadingLottie: {
-    width: 200,
   },
 });
 
