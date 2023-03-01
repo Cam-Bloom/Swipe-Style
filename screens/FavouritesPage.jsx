@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
   buttonRemove:{
+    color:colors.darkviolet,
     marginLeft: 20,
   }
 });
