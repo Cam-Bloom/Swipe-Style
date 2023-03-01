@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import RemoveClothesFromBasket from '../components/RemoveClothesFromBasket';
 import EditClothesAmountButton from '../components/EditClothesAmountButton';
+import { colors } from "../utils/variables.js";
 
 const BasketPage = ({ basket, setBasket }) => {
   const [totalAmount, setTotalAmount] = useState(0);
@@ -84,7 +85,7 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       borderRadius: 8,
       elevation: 3,
-      backgroundColor: '#EE6E29',
+      backgroundColor: colors.darkviolet,
       marginLeft: 60,
       marginTop: 5,
       marginBottom: 5,

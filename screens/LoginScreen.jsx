@@ -9,6 +9,8 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import React, { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/firebase";
+import { colors } from "../utils/variables.js";
+
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -39,6 +41,7 @@ const LoginScreen = ({ navigation }) => {
     <KeyboardAvoidingView style={styles.container}>
       <View style={styles.textfields}>
         <TextInput
+        color={colors.darkviolet}
           label="Email"
           variant="outlined"
           leading={(props) => <Icon name="account" {...props} />}
@@ -46,6 +49,7 @@ const LoginScreen = ({ navigation }) => {
           onChangeText={(text) => setEmail(text)}
         ></TextInput>
         <TextInput
+        color={colors.darkviolet}
           label="Password"
           variant="outlined"
           leading={(props) => <Icon name="lock" {...props} />}
@@ -56,8 +60,9 @@ const LoginScreen = ({ navigation }) => {
       </View>
 
       <View style={styles.buttonContainer}>
-        <Button title="Sign In" onPress={handleSignIn} />
+        <Button color={colors.darkviolet} title="Sign In" onPress={handleSignIn} />
         <Button
+        color={colors.darkviolet}
           title="Sign Up"
           variant="outlined"
           onPress={() => navigation.navigate("Sign Up")}
