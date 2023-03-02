@@ -5,7 +5,6 @@ import {
   FlatList,
   StyleSheet,
   Text,
-  StatusBar,
   Image,
   Pressable,
 } from "react-native";
@@ -30,14 +29,16 @@ const FavouritesPage = ({
         <View style={styles.bottom}>
           <View style={styles.left}>
             <View style={styles.description}>
-              <Text style={styles.title}>{item.title}</Text>
+              <Text numberOfLines={3} ellipsizeMode="tail" style={styles.title}>
+                {item.title}
+              </Text>
               <View style={styles.category}>
-                <Text style={styles.categoryTitle}>category: </Text>
-                <Text style={styles.categoryValue}>{item.category}</Text>
+                <Text style={styles.categoryValue}>
+                  {item.category.toUpperCase()}
+                </Text>
               </View>
             </View>
             <View style={styles.price}>
-              <Text style={styles.priceTitle}>price: </Text>
               <Text style={styles.priceValue}>{item.price}</Text>
             </View>
             <View style={styles.buttonArea}>
@@ -90,19 +91,18 @@ const FavouritesPage = ({
 const styles = StyleSheet.create({
   container: {
     flex: 2,
-    // paddingTop: StatusBar.currentHeight || 0,
-    paddingTop: 20,
+    paddingTop: 16,
     justifyContent: "center",
     backgroundColor: colors.white,
   },
   item: {
-    backgroundColor: colors.lightgrey,
+    padding: 16,
+    marginVertical: 8,
+    marginHorizontal: 8,
     borderWidth: 1,
     borderRadius: 20,
     borderColor: colors.border,
-    padding: 20,
-    marginVertical: 10,
-    marginHorizontal: 16,
+    backgroundColor: colors.lightgrey,
   },
   top: {
     flex: 1,
@@ -119,9 +119,10 @@ const styles = StyleSheet.create({
     color: colors.darkgrey,
   },
   productImage: {
-    width: "auto",
-    height: 160,
+    resizeMode: "cover",
+    height: 180,
     marginBottom: 10,
+    marginLeft: 10,
     borderRadius: 10,
   },
   viewBasketButton: {
@@ -129,18 +130,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     backgroundColor: colors.darkviolet,
-    marginLeft: 16,
-    marginRight: 16,
+    marginLeft: 8,
+    marginRight: 8,
     marginTop: 5,
     marginBottom: 5,
+    padding: 12,
   },
   viewBasketTitle: {
     fontSize: 20,
-    lineHeight: 26,
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: colors.white,
-    padding: 12,
   },
   button: {
     alignItems: "center",
@@ -163,10 +163,7 @@ const styles = StyleSheet.create({
   },
   right: {
     flex: 2,
-    justifyContent: "center",
-  },
-  description: {
-    // paddingBottom: 10,
+    justifyContent: "space-around",
   },
   price: {
     flexDirection: "row",
@@ -199,9 +196,6 @@ const styles = StyleSheet.create({
   buttonRemove: {
     color: colors.darkviolet,
     marginLeft: 20,
-  },
-  buttonAddBasket: {
-    marginRight: 15,
   },
 });
 

@@ -110,7 +110,7 @@ const AddToBasketButton = ({ basket, setBasket, clothes }) => {
             />
           )}
           size={30}
-          backgroundColor={colors.red}
+          backgroundColor={colors.darkgrey}
           onPress={() => removeClothesFromBasket()}
         />
       )}
