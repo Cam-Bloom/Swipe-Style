@@ -4,11 +4,22 @@
 
 Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover new items based on your interests. With Swipe Style, you can easily find and favourite items that you like and get suggestions for similar items based on tags.
 
+[Watch our presentation on YouTube](https://www.youtube.com/watch?v=3_3Q-xbtpj0)
+
 <p align="center">
   <img src="https://s9.gifyu.com/images/clothes-tinder.gif" height="600"/>
 </p>
 
-[Watch our presentation on youttube](https://www.youtube.com/watch?v=3_3Q-xbtpj0)
+<details>
+<summary>View more gifs</summary>
+
+<div style="display:flex">
+<img src="https://media1.tenor.com/images/6849de53d330897cae3c307309f51931/tenor.gif?itemid=27638598" alt="Sign Up Page">
+<blockquote class="imgur-embed-pub" lang="en" data-id="LSOlL0d" data-context="false" ><a href="//imgur.com/LSOlL0d"></a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+<img src="https://media.tenor.com/images/617862c98cd1c2c9aba2ee9729eac4a4/tenor.gif" alt="Settings Page">
+</div>
+
+</details>
 
 
 ## Developed By
