@@ -8,7 +8,6 @@ Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover 
   <img src="https://s9.gifyu.com/images/clothes-tinder.gif" height="600"/>
 </p>
 
-
 ## Developed By
 
 This app was developed over a period of three weeks by a team of Northcoders students as part of a final capstone project.
@@ -56,34 +55,43 @@ For data storage, we have used PostgreSQL, which is hosted on ElephantSQL and ac
 
 - NodeJS installed (Latest LTS recommended)
 - React Native CLI installed globally (npm install -g react-native-cli)
-- Either Android Studio and an emulated phone, or a mobile phone with the Expo Go application 
+- Either Android Studio and an emulated phone, or a mobile phone with the Expo Go application
 
 ## Installation
 
 To install and run Swipe Style on your local machine, follow these steps:
 
 ### Back-End and API Setup
+
 - Install and set up the backend for this project available [here](https://github.com/Superjim/clothes-backend).
 - Clone this repository to your local machine.
 - Install the project dependencies by running the command npm install.
 - Navigate to the utils/api.js file and replace the baseURL with http://localhost:3000/api (we didn't actually hide our API key).
 
 ### Firebase Auth Setup
+
 - To setup your own firebase authentication please head to firebase website [here](https://console.firebase.google.com/)
 - Click the following button
 
+<p align="center">
 <img src="https://i.imgur.com/iDpvlE2.png" alt="Firebase New Project" height=200/>
+</p>
 
 - Follow project creation and disable google analytics
 - Head to authenticaiton card enable email and password authentication as seen below
 
+<p align="center">
 <img src="https://i.imgur.com/v9wjjdX.png" alt="Email Auth" height=200/>
+</p>
 
-- Now head back to project overview and add a web app 
+- Now head back to project overview and add a web app
 
+<p align="center">
 <img src="https://i.imgur.com/Ah1jAT8.png" alt="Web App Creation" height=200/>
+</p>
 
-- After creating app you should see a firebase config code block 
+- After creating app you should see a firebase config code block
+
 ```
 apiKey: "XXXXXXXXXXXXXXXXXXXXXX",
 authDomain: "XXXXXXXXXXXXXXXXXXXXXX",
@@ -92,7 +100,9 @@ storageBucket: "XXXXXXXXXXXXXXXXXXXXXX",
 messagingSenderId: "XXXXXXXXXXXXXXXXXXXXXX",
 appId: "XXXXXXXXXXXXXXXXXXXXXX"
 ```
+
 - Create a .env file in root of the project you should use your information from above add to following varibles
+
 ```
 API_KEY=XXXXXXXXXXXXXXXXXXXXXX
 AUTH_DOMAIN=XXXXXXXXXXXXXXXXXXXXXX
@@ -100,8 +110,9 @@ PROJECT_ID=XXXXXXXXXXXXXXXXXXXXXX
 STORAGE_BUCKET=XXXXXXXXXXXXXXXXXXXXXX
 MESSAGING_SENDER_ID=XXXXXXXXXXXXXXXXXXXXXX
 APP_ID=XXXXXXXXXXXXXXXXXXXXXX
-``` 
-- Now you should have working authenticaiton 
+```
+
+- Now you should have working authenticaiton
 
 ### Expo
 
