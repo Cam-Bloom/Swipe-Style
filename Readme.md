@@ -8,7 +8,10 @@ Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover 
   <img src="https://s9.gifyu.com/images/clothes-tinder.gif" height="600"/>
 </p>
 
-<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/3_3Q-xbtpj0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=3_3Q-xbtpj0" target="_blank"><img src="VIDEO_THUMBNAIL" alt="StyleSwipe Presentation" width="50%" /></a>
+</p>
+
 
 ## Developed By
 
