@@ -6,6 +6,8 @@ Welcome to Swipe Style, a mobile app inspired by Tinder that helps you discover 
 
 [Watch our presentation on YouTube!](https://www.youtube.com/watch?v=3_3Q-xbtpj0)
 
+[Check out the back-end here](https://github.com/Superjim/clothes-backend)
+
 Please excuse the poor quality of the gifs
 
 <p align="center">
